@@ -1,0 +1,11 @@
+{
+  "showInlineTitle": false,
+  "spellcheck": true,
+  "spellcheckLanguages": [
+    "en-US",
+    "hu"
+  ],
+  "foldIndent": false,
+  "foldHeading": false,
+  "defaultViewMode": "preview"
+}

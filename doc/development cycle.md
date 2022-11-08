@@ -1,0 +1,32 @@
+todo: expand this with more details
+
+- planning
+	- what features
+	- how will they function
+	- integration to other parts
+- **implementing**
+- testing
+  - verification
+  - validation
+  - user experience
+  - black box
+  - white box
+  - unit tests
+  - integration tests
+  - system tests
+  - code coverage
+    - condition coverage
+    - multiple condition coverage
+    - path coverage
+  - platforms
+    - Web
+    - Windows
+    - Android
+    - Linux
+  - accessibility
+  - https://webaim.org/standards/wcag/checklist
+  - load / stress test
+- documentation
+  - in code (comments)
+  - changelog
+  - software documentation

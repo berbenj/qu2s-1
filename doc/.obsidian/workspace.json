@@ -1,0 +1,165 @@
+{
+  "main": {
+    "id": "7ccad25ecfc0f0d5",
+    "type": "split",
+    "children": [
+      {
+        "id": "71941b7b30b31e49",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "831c8883bb867e8b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "development cycle.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "7c53a91c1a1fe1fc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "software requirement specification.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "d066801fcac37a47",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "schedule.md",
+                "mode": "preview",
+                "source": false
+              }
+            }
+          }
+        ],
+        "stacked": true
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "58c0ab353a821f49",
+    "type": "split",
+    "children": [
+      {
+        "id": "edd8b0fcfbf312c8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "98d59b3bb222dd2c",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "4d136a922fd8ca7c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "right": {
+    "id": "6f4ac82d39c94bfb",
+    "type": "split",
+    "children": [
+      {
+        "id": "0b796150087d7892",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d998e8e15827dd10",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "development cycle.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "26dd409ae964f29e",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "development cycle.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "bf89d76780166068",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "5a425d237f657e34",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "development cycle.md"
+              }
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "831c8883bb867e8b",
+  "lastOpenFiles": [
+    "schedule.md",
+    "development cycle.md",
+    "software requirement specification.md",
+    "Untitled Diagram.svg"
+  ]
+}
