@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart'; // date manipulation
 
 void main() {
   runApp(const MyApp());
@@ -11,105 +14,132 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'qu2s',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
+        scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20),
+        primaryColor: Colors.white,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(title: 'Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+class HomePage extends StatefulWidget {
+  const HomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomePageState extends State<HomePage> {
+  String _date = "";
+  String _time = "";
+  Color _textColor = const Color.fromARGB(255, 228, 228, 228);
+  Timer? _timer;
 
-  void _incrementCounter() {
+  bool _isLeapYear(int year) {
+    if (year % 4 == 0) {
+      if (year % 100 == 0) {
+        if (year % 400 == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  void _setCurrentDate() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      // offset date to the b36 start of year
+      var date = DateTime.now().toUtc();
+      if (_isLeapYear(date.year)) {
+        date = date.add(const Duration(days: -366));
+      } else {
+        date = date.add(const Duration(days: -365));
+      }
+      date = date.add(const Duration(days: 122));
+
+      int year = date.year;
+      int day = Jiffy(date).dayOfYear;
+
+      int season = day ~/ 91;
+      day %= 91;
+      int week = day ~/ 13;
+      day %= 13;
+
+      String y = year.toRadixString(36).padLeft(3, "0");
+      String s = (season + 1).toRadixString(5).characters.last;
+      String w = (week + 1).toString();
+      String d = day.toRadixString(13);
+
+      _date = "$y/$s$w-$d";
+      _time =
+          "${date.hour.toString().padLeft(2, "0")}:${date.minute.toString().padLeft(2, "0")}:${date.second.toString().padLeft(2, "0")}";
+
+      if (day % 3 == 0) {
+        _textColor = const Color.fromARGB(255, 85, 125, 220);
+      } else {
+        _textColor = const Color.fromARGB(255, 228, 228, 228);
+      }
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(
+        const Duration(microseconds: 10), (Timer t) => _setCurrentDate());
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    _setCurrentDate();
+
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Datetime right now:',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: "Fira code",
+              ),
             ),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              _date,
+              style: TextStyle(
+                color: _textColor,
+                fontSize: 60.0,
+                fontFamily: "Fira code",
+              ),
+            ),
+            Text(
+              _time,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 228, 228, 228),
+                fontSize: 40.0,
+                fontFamily: "Fira code",
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

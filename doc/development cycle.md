@@ -1,13 +1,13 @@
 todo: expand this with more details
 
-- planning
+- **planning**
 	- what features
 	- how will they function
 	- integration to other parts
 - **implementing**
-- testing
-  - verification
-  - validation
+- **testing**
+  - verification (what exists is working correctly?)
+  - validation (what exist is the same as in the documentation?)
   - user experience
   - black box
   - white box
@@ -26,7 +26,7 @@ todo: expand this with more details
   - accessibility
   - https://webaim.org/standards/wcag/checklist
   - load / stress test
-- documentation
+- **documentation**
   - in code (comments)
   - changelog
   - software documentation
