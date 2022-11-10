@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
   void _setCurrentDate() {
     setState(() {
       // offset date to the b36 start of year
-      var date = DateTime.now().toUtc();
+      var date = DateTime.now();
       if (_isLeapYear(date.year)) {
         date = date.add(const Duration(days: -366));
       } else {
@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
           "${date.hour.toString().padLeft(2, "0")}:${date.minute.toString().padLeft(2, "0")}:${date.second.toString().padLeft(2, "0")}";
 
       if (day % 3 == 0) {
-        _textColor = const Color.fromARGB(255, 85, 125, 220);
+        _textColor = const Color.fromARGB(255, 150, 178, 244);
       } else {
         _textColor = const Color.fromARGB(255, 228, 228, 228);
       }
@@ -114,31 +114,22 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Datetime right now:',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: "Fira code",
-              ),
-            ),
-            Text(
-              _date,
-              style: TextStyle(
-                color: _textColor,
-                fontSize: 60.0,
-                fontFamily: "Fira code",
-              ),
-            ),
-            Text(
-              _time,
-              style: const TextStyle(
-                color: Color.fromARGB(255, 228, 228, 228),
-                fontSize: 40.0,
-                fontFamily: "Fira code",
-              ),
-            ),
+            _firaText("Datetime right now:", Colors.white, 12),
+            _firaText(_date, _textColor, 60),
+            _firaText(_time, const Color.fromARGB(255, 228, 228, 228), 40),
           ],
         ),
+      ),
+    );
+  }
+
+  Text _firaText(String text, Color color, double fontSize) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: color,
+        fontSize: fontSize,
+        fontFamily: "Fira code",
       ),
     );
   }
