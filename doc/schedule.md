@@ -13,6 +13,7 @@ number headings: first-level 2, 1.1., auto
 ### 0.2. 
 - [ ] icon for all platforms
 - [ ] custom frame for windows
+      https://www.youtube.com/watch?v=bee2AHQpGK4
 - [ ] download page only on the web for windows and android versions
 	- [ ] warning that these are non singend versions, meaning they probably will be detected to be not secure programs and the windows and android will try to stop you from installing/running
 - [ ] connect to database form all platform

@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart'; // date manipulation
+import 'package:dart_date/dart_date.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,35 +41,16 @@ class _HomePageState extends State<HomePage> {
   Color _textColor = const Color.fromARGB(255, 228, 228, 228);
   Timer? _timer;
 
-  bool _isLeapYear(int year) {
-    if (year % 4 == 0) {
-      if (year % 100 == 0) {
-        if (year % 400 == 0) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
+  bool _isLeapYear(int year) => (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
 
-  void _setCurrentDate() {
+  void _setCurrentDate(DateTime date) {
     setState(() {
       // offset date to the b36 start of year
-      var date = DateTime.now().toUtc();
-      if (_isLeapYear(date.year)) {
-        date = date.add(const Duration(days: -366));
-      } else {
-        date = date.add(const Duration(days: -365));
-      }
-      date = date.add(const Duration(days: 122));
+      date = date.subYears(1);
+      date = date.addDays(122);
 
-      int year = date.year;
-      int day = Jiffy(date).dayOfYear;
+      int year = date.getYear;
+      int day = date.getDayOfYear;
 
       int season = day ~/ 91;
       day %= 91;
@@ -85,7 +67,7 @@ class _HomePageState extends State<HomePage> {
           "${date.hour.toString().padLeft(2, "0")}:${date.minute.toString().padLeft(2, "0")}:${date.second.toString().padLeft(2, "0")}";
 
       if (day % 3 == 0) {
-        _textColor = const Color.fromARGB(255, 85, 125, 220);
+        _textColor = const Color.fromARGB(255, 167, 190, 243);
       } else {
         _textColor = const Color.fromARGB(255, 228, 228, 228);
       }
@@ -95,8 +77,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(
-        const Duration(microseconds: 10), (Timer t) => _setCurrentDate());
+    _timer = Timer.periodic(const Duration(microseconds: 10), (Timer t) => _setCurrentDate(DateTime.now()));
   }
 
   @override
@@ -107,39 +88,42 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _setCurrentDate();
+    _setCurrentDate(DateTime.now());
 
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Datetime right now:',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: "Fira code",
-              ),
-            ),
-            Text(
-              _date,
-              style: TextStyle(
-                color: _textColor,
-                fontSize: 60.0,
-                fontFamily: "Fira code",
-              ),
-            ),
-            Text(
-              _time,
-              style: const TextStyle(
-                color: Color.fromARGB(255, 228, 228, 228),
-                fontSize: 40.0,
-                fontFamily: "Fira code",
-              ),
-            ),
+            _veraText('Datetime right now:', Colors.white30, 20),
+            _firaText(_date, _textColor, 60),
+            _firaText(_time, Colors.white, 40),
           ],
         ),
       ),
     );
   }
+
+  Text _firaText(String text, Color color, double size) {
+    return Text(
+      text,
+      style: TextStyle(color: color, fontSize: size, fontFamily: "Fira code", fontWeight: FontWeight.w300),
+    );
+  }
+
+  Text _veraText(String text, Color color, double size) {
+    return Text(
+      text,
+      style: TextStyle(color: color, fontSize: size, fontFamily: "Varela round"),
+    );
+  }
+}
+
+/// FOR TSTING:
+
+@visibleForTesting
+class TestHomePageState extends _HomePageState {
+  @visibleForTesting
+  bool isLeapYearTest(int year) => _isLeapYear(year);
+  Text firaTextTest(String text, Color color, double size) => _firaText(text, color, size);
 }

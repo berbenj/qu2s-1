@@ -4,6 +4,7 @@ todo: expand this with more details
 - what features
 - how will they function
 - integration to other parts
+- https://pub.dev
 ## Implementing
 ## Testing
 - verification (what exists is working correctly?)

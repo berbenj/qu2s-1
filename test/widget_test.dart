@@ -11,11 +11,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:qu2s/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('app starts up', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
     await tester.pump();
 
     // expect(find.text('0'), findsOneWidget);
+  });
+
+  test('homePageState', () {
+    TestHomePageState testHomePageState = TestHomePageState();
+
+    assert(testHomePageState.isLeapYearTest(2020) == true);
+    assert(testHomePageState.isLeapYearTest(2021) == false);
+    assert(testHomePageState.isLeapYearTest(2022) == false);
+    assert(testHomePageState.isLeapYearTest(2023) == false);
+    assert(testHomePageState.isLeapYearTest(2024) == true);
+    assert(testHomePageState.isLeapYearTest(2100) == false);
+    assert(testHomePageState.isLeapYearTest(2000) == true);
+    assert(testHomePageState.isLeapYearTest(2) == false);
   });
 }
