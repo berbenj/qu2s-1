@@ -72,9 +72,15 @@ This document describes the software requirements of `qu2s` that need to be comp
 	- graphs
 	- diagrams
 ### 3.3 Graph editor
-- auto place nodes and edges based on graph type
+- node / edge placement
+	- manual, snapping
+	- auto place nodes and edges based on graph type
+	- can be switched on the go
 - multiple graph types (treelike, cluster)
 - nodes can be: text, documents, wiki pages, another graph
+- default style
+- themes and style
+- readable / visual form, savable in both format
 ### 3.4 Cloud storage
 - security
 - easy gallery
@@ -85,6 +91,8 @@ This document describes the software requirements of `qu2s` that need to be comp
 - version control for selected folders
 ### 3.5 Communication
 - communities
+	- name
+	- group label (community, group, company, set, circle, band, faction, gang, ...)
 - integrate popular communication sites (discord, twitter, ...)
 #### 3.5.1 Forum
 for slow communication
@@ -189,7 +197,9 @@ for posting
 ### 4.1 Desktop
 - custom application frame, with title, minimize, maximize, close buttons
 ### 4.2 Phone
+- stay logged in
 ### 4.3 Web
+- stay logged in
 ## 5 Interface requirements
 - multiple apply able stylesheets
 - user can define custom stylesheet

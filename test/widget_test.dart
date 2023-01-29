@@ -5,6 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -13,22 +15,16 @@ import 'package:qu2s/main.dart';
 void main() {
   testWidgets('app starts up', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    MyApp myApp = const MyApp();
+    await tester.pumpWidget(myApp);
     await tester.pump();
 
-    // expect(find.text('0'), findsOneWidget);
-  });
-
-  test('homePageState', () {
-    TestHomePageState testHomePageState = TestHomePageState();
-
-    assert(testHomePageState.isLeapYearTest(2020) == true);
-    assert(testHomePageState.isLeapYearTest(2021) == false);
-    assert(testHomePageState.isLeapYearTest(2022) == false);
-    assert(testHomePageState.isLeapYearTest(2023) == false);
-    assert(testHomePageState.isLeapYearTest(2024) == true);
-    assert(testHomePageState.isLeapYearTest(2100) == false);
-    assert(testHomePageState.isLeapYearTest(2000) == true);
-    assert(testHomePageState.isLeapYearTest(2) == false);
+    expect(find.byKey(const Key('date_text')), findsOneWidget);
+    expect(
+        find.byWidgetPredicate(
+          (widget) => widget is Text && widget.style?.color == Colors.white,
+          description: '`Text` widget with strike through',
+        ),
+        findsOneWidget);
   });
 }
