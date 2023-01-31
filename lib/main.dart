@@ -109,11 +109,13 @@ class _HomePageState extends State<HomePage> {
     _setCurrentDate();
 
     return Scaffold(
-      body: Container(
+        body: Center(
+      child: Container(
         margin: const EdgeInsets.all(20),
+        constraints: const BoxConstraints(maxWidth: 500),
         child: ListView(
           children: [
-            Post("Datetime right now:", ["Base36 Local Time: $_date", "Gregorian Local Time: $_time"]),
+            Post("Datetime right now:", ["B36 Local Time: $_date", "Gregorian Local Time: $_time"]),
             Post("1k6/25-7", [
               "A start ... yet again.",
               "I truely hope I will not loose this start. I have started this project so many times, but I have always got lost in it, got off track or moved to a different platform to make this a reality. Not long before this I started to look for something that could support my plan of releaseing this to the web, on mibile and on desktop as well, and I decided on flutter. I really hope I will not regret this decision too soon.",
@@ -123,7 +125,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Column Post(String title, List<String> content) {
