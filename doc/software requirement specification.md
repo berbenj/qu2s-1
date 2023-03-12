@@ -3,7 +3,7 @@ number headings: first-level 2, max 5, 1.1, auto
 ---
 # Software Requirement Specification
 > **Project name**: `qu2s`
-> **By**: `dev_7g94`
+> **By**: `7g94`
 ## 1 Introduction
 This document describes the software requirements of `qu2s` that need to be completed for the project to be considered finished.
 ## 2 General description
@@ -196,10 +196,10 @@ for posting
 ## 4 Operating system specific Functional requirements
 ### 4.1 Desktop
 - custom application frame, with title, minimize, maximize, close buttons
+- stay logged in
 ### 4.2 Phone
 - stay logged in
 ### 4.3 Web
-- stay logged in
 ## 5 Interface requirements
 - multiple apply able stylesheets
 - user can define custom stylesheet
@@ -210,16 +210,19 @@ for posting
 - fast response time
 	- no function can take more then 1ms
 	- app loading is within 1s
-- all time 60 fps (except on web)
+- all time 60 fps (on desktop)
 ## 7 Non-Functional Attributes
 - quick error recovery
 - low memory mode
 - low battery mode
-### 7.1 Security
+- ISO/IEC 9126 (25010)
+### 7.1 User friendly
+- for adult users with extensive experience with computers and internet
+### 7.2 Security
 - accounts
 - cloud storage
 - wiki pages
-### 7.2 Operating systems
+### 7.3 Operating systems
 - Web
 - Windows
 - Android
@@ -227,7 +230,7 @@ for posting
 - MacOS
 - IOS
 ## 8 Preliminary Schedule and Budget
-- there is no budget, only the amount `the_dev` can spend on it
+- there is no budget, only the amount `7g94` can spend on it
 - the first estimate that the 80% of the project should be finished before `1k8`
 - proper schedule TBD (to be determined)
 - continuous development, new development always available to public

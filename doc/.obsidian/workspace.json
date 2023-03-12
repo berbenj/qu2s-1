@@ -8,37 +8,13 @@
         "type": "tabs",
         "children": [
           {
-            "id": "93153f04e9524bc0",
+            "id": "77b0902c04f51727",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "software requirement specification.md",
-                "mode": "preview",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "c70d26a1a90003e7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "schedule.md",
-                "mode": "preview",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "f7d83722abb42bda",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "development cycle.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               }
             }
@@ -58,7 +34,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "98d59b3bb222dd2c",
+            "id": "7a4fff1d7d996241",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -86,8 +62,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 308.5
   },
   "right": {
     "id": "6f4ac82d39c94bfb",
@@ -162,14 +137,16 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "93153f04e9524bc0",
+  "active": "77b0902c04f51727",
   "lastOpenFiles": [
-    "schedule.md",
-    "development cycle.md",
-    "software requirement specification.md",
     "qu2s.canvas",
+    "Untitled.canvas",
+    "Untitled.md",
+    "Untitled Diagram.svg",
+    "schedule.md",
+    "software requirement specification.md",
+    "development cycle.md",
     "general.canvas",
-    "Untitled 1.canvas",
-    "Untitled Diagram.svg"
+    "Untitled 1.canvas"
   ]
 }

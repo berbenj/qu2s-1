@@ -6,15 +6,22 @@ todo: expand this with more details
 - integration to other parts
 - https://pub.dev
 ## Implementing
+- implementing new features
+- code cleanup / refactoring
+- remove todos, notes → specs, requirements
 ## Testing
-- verification (what exists is working correctly?)
 - validation (what exist is the same as in the documentation?)
-- user experience
-- black box
-- white box
-- unit tests
-- integration tests
-- system tests
+- verification (what exists is working correctly?)
+	- unit test
+		- black box
+		- white box
+		- user experience
+	- integration
+		- black box
+		- user experience
+	- system
+		- black box
+		- user experience
 - code coverage
 	- condition coverage
 	- multiple condition coverage
@@ -30,11 +37,12 @@ todo: expand this with more details
 ## Documentation
 - in code (comments)
 - changelog
+- modell actualization
 - software documentation
 	- available features
 	- how to do what
 	- API usage
-	- fit SRS to changes
+	- fit SRS to changes (maybe only in the modell?)
 - static testing (review)
 ## Deployment
 - ask for version
