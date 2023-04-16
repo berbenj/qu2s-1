@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "software requirement specification.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -62,7 +62,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 308.5
+    "width": 308.5,
+    "collapsed": true
   },
   "right": {
     "id": "6f4ac82d39c94bfb",

@@ -10,6 +10,16 @@ This document describes the software requirements of `qu2s` that need to be comp
 `qu2s` is a combination of multiple concepts. These mainly include communication, management and knowledge/information database. It's a highly customizable and integrated system that focuses on performance and user experience.
 ### 2.1 Purpose
 - To provide a unified and free interface for all communication and information management on all platforms.
+- provide a replacement for:
+	- Discord
+	- Twitter
+	- Instagram
+	- Wikipedia
+	- FandomWiki
+	- Twitch
+	- Youtube
+	- Spotify
+	- Steam (without allowing microtransactions, subscribsons)
 ### 2.2 Intended audience
 - experienced or semi experienced internet users
 - not for those who are inexperienced in IT and internet usage
@@ -179,7 +189,7 @@ for posting
 	- how much hour per project per timeframe
 	- as soon as possible / as late as possible / balanced
 - auto tracks app and web usage for later event logging
-### 3.7 Knowledge/Information database
+### 3.7 Knowledge/Information database / Archive
 - pages
 	- title
 	- language translations
@@ -205,6 +215,7 @@ for posting
 - user can define custom stylesheet
 - accessibility features
 	- multiple languages
+	- anything can be done with only keyboard / mouse
 ## 6 Performance Requirements  
 - can handle 1'000'000'000 users at once
 - fast response time
