@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "116446779617",
+    "project_id": "qu2s-e9232",
+    "storage_bucket": "qu2s-e9232.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:116446779617:android:e3a311c0658bc77b3cffa0",
+        "android_client_info": {
+          "package_name": "com.example.qu2s"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "116446779617-7dik467sb7ap0g0se0vbrbsva35o14et.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs4pTIW_5TFnZq5h8ViZra-SUHzAQEpsY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "116446779617-7dik467sb7ap0g0se0vbrbsva35o14et.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "116446779617-l36u9lel1rgr7110abds01gq95sp0slj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.qu2s"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

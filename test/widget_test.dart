@@ -5,16 +5,26 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:math';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:qu2s/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('app starts up', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    MyApp myApp = const MyApp();
+    await tester.pumpWidget(myApp);
     await tester.pump();
 
-    // expect(find.text('0'), findsOneWidget);
+    expect(find.byKey(const Key('date_text')), findsOneWidget);
+    expect(
+        find.byWidgetPredicate(
+          (widget) => widget is Text && widget.style?.color == Colors.white,
+          description: '`Text` widget with strike through',
+        ),
+        findsOneWidget);
   });
 }

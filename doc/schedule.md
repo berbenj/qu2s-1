@@ -1,43 +1,12 @@
 ---
-number headings: 
+number headings: first-level 2, 1.1., auto
 ---
 # Schedule
-## 0.0
-### 0.1.0
-- [x] release build is running on
-	- [x] web (`flutter build web`)
-	      (`build\web`)
-	- [x] windows (`flutter build windows`)
-	      (`build\windows\runner\Release`)
-	- [x] android (`flutter build apk`) 
-	      (`build\app\outputs\flutter-apk\app-release.apk`)
-### 0.2.0
-- [ ] login
-	- [ ] validation from database
-	- [ ] secure password
-- [ ] user page
-	- [ ] changeable name
-	- [ ] changeable password
-### 0.3.0
-- [ ] blog
-	- [ ] adding new posts
-	- [ ] editing posts
-	- [ ] removing posts
-	- [ ] viewing posts in user page
-### 0.4.0
+### 0.1. 
 - [ ] calendar
 	- [ ] display Gregorian calendar
 		- [ ] week
-		- [ ] day
-		- [ ] +- day
-### 0.5.0
-- [ ] calendar
-	- [ ] display b36 calendar
-		- [ ] week
-		- [ ] day
-		- [ ] +- day
-	- [ ] time zones
-### 0.6.0
+### 0.2. 
 - [ ] management
 	- [ ] standalone events
 		- [ ] title, start time, end time, description
@@ -48,13 +17,13 @@ number headings:
 		- [ ] adding events
 		- [ ] deleting events
 		- [ ] editing events properties
-### 0.7.0
+### 0.3. 
 - [ ] management
 	- [ ] drag'n'drop
 		- [ ] moving events
 		- [ ] duplicate event
 	- [ ] splitting events
-### 0.8.0
+### 0.4. 
 - [ ] management
 	- [ ] event repeat
 		- [ ] every n days, weeks, ...
@@ -62,8 +31,38 @@ number headings:
 		- [ ] ghost events in the future
 		- [ ] change all / change this / change all future
 		- [ ] delete all / delete this / delete all future
-## 1.0
-### 1.1.0
+### 0.5. 
+- [ ] management
+	- [ ] auto plan event placement
+		- [ ] end time
+		- [ ] dependencies
+		- [ ] priority
+		- [ ] overdue ( time since last event / frequency ) * priority
+		- [ ] balance work / relax / sleep
+### 0.6. 
+- [ ] calendar
+	- [ ] different views
+		- [ ] day
+		- [ ] +- day
+	- [ ] time zones
+- [ ] management
+	- [ ] event / task description
+### 0.7. 
+- [ ] blog
+	- [ ] adding new posts
+	- [ ] editing posts
+	- [ ] removing posts
+	- [ ] viewing posts in user page
+### 0.8. refining
+- [ ] custom frame for windows
+      https://www.youtube.com/watch?v=bee2AHQpGK4
+- [ ] management
+	- [ ] statistics
+
+**LEARNING** 
+- [ ] https://docs.flutter.dev
+## 1. 
+### 1.1. 
 - [ ] management
 	- [ ] event status
 		- [ ] add, edit, remove statuses
@@ -73,7 +72,14 @@ number headings:
 	- [ ] registration
 	- [ ] guest login
 	- [ ] recheck user pages
-### 1.2.0
+### 1.2. 
+- [ ] calendar
+	- [ ] display b36 calendar
+		- [ ] week
+- [ ] user page
+	- [ ] changeable password
+	- [ ] changeable name
+### 1.3. 
 - [ ] management
 	- [ ] tasks
 		- [ ] hierarchy

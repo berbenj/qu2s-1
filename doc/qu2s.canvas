@@ -1,0 +1,39 @@
+{
+	"nodes":[
+		{"type":"link","url":"https://qu2s.com","id":"0cee6e4cab731ddf","x":-260,"y":-580,"width":333,"height":363,"color":"6"},
+		{"type":"text","text":"## Communication","id":"f5bc4834045108c9","x":360,"y":-416,"width":376,"height":84,"color":"5"},
+		{"type":"text","text":"## Management","id":"70eca39b1ad044a8","x":360,"y":-130,"width":328,"height":84,"color":"5"},
+		{"type":"text","text":"## Information","id":"ee01fb8220604881","x":360,"y":41,"width":312,"height":84,"color":"5"},
+		{"type":"text","text":"UX $\\gg$ everything","id":"89ab5859e4a83e0f","x":-140,"y":-15,"width":190,"height":50,"color":"3"},
+		{"type":"text","text":"Costumizability","id":"fae9663ef3eeb3f2","x":-140,"y":55,"width":190,"height":50,"color":"3"},
+		{"type":"text","text":"Performance","id":"1d6729f8f77714e9","x":-120,"y":125,"width":170,"height":50,"color":"3"},
+		{"type":"text","text":"cMetatext","id":"c7abe846149066af","x":736,"y":165,"width":146,"height":50,"color":"5"},
+		{"type":"text","text":"## Archive","id":"0f244724934df5a2","x":360,"y":246,"width":216,"height":84,"color":"5"},
+		{"type":"text","text":"Forum","id":"19bf0a7cd0913d95","x":882,"y":-562,"width":118,"height":50,"color":"5"},
+		{"type":"text","text":"Chat","id":"99e7d476c741d2d5","x":882,"y":-492,"width":90,"height":50,"color":"5"},
+		{"type":"text","text":"Blog","id":"0cea2dde9b5579a3","x":882,"y":-422,"width":88,"height":50,"color":"5"},
+		{"type":"text","text":"Website","id":"f35fb217aa677b3f","x":882,"y":-352,"width":138,"height":50,"color":"5"},
+		{"type":"text","text":"Streaming","id":"e6277f443a77fa5a","x":882,"y":-282,"width":138,"height":50,"color":"5"},
+		{"type":"text","text":"Accounts","id":"c870d65b8bfa633e","x":360,"y":350,"width":134,"height":50,"color":"5"},
+		{"type":"text","text":"# qu2s","id":"0912eb509475ac25","x":50,"y":-154,"width":180,"height":108,"color":"1"}
+	],
+	"edges":[
+		{"id":"2b9df31d93e99ba5","fromNode":"f5bc4834045108c9","fromSide":"left","toNode":"0912eb509475ac25","toSide":"right"},
+		{"id":"30613e273553042f","fromNode":"ee01fb8220604881","fromSide":"left","toNode":"0912eb509475ac25","toSide":"right"},
+		{"id":"6b3ddab256b8e10c","fromNode":"1d6729f8f77714e9","fromSide":"right","toNode":"0912eb509475ac25","toSide":"bottom"},
+		{"id":"e998b7fa819d3bdc","fromNode":"fae9663ef3eeb3f2","fromSide":"right","toNode":"0912eb509475ac25","toSide":"bottom"},
+		{"id":"bc092860dc5b94d6","fromNode":"89ab5859e4a83e0f","fromSide":"right","toNode":"0912eb509475ac25","toSide":"bottom"},
+		{"id":"82be694559621a7d","fromNode":"0912eb509475ac25","fromSide":"left","toNode":"0cee6e4cab731ddf","toSide":"bottom"},
+		{"id":"f1a68e544dd2ebab","fromNode":"c870d65b8bfa633e","fromSide":"left","toNode":"0912eb509475ac25","toSide":"right"},
+		{"id":"0d51a91ed707d477","fromNode":"19bf0a7cd0913d95","fromSide":"left","toNode":"f5bc4834045108c9","toSide":"right"},
+		{"id":"b7c2e02a5a492e0a","fromNode":"99e7d476c741d2d5","fromSide":"left","toNode":"f5bc4834045108c9","toSide":"right"},
+		{"id":"e297af9cab993e69","fromNode":"0cea2dde9b5579a3","fromSide":"left","toNode":"f5bc4834045108c9","toSide":"right"},
+		{"id":"b0ff3e48e1d0394b","fromNode":"f35fb217aa677b3f","fromSide":"left","toNode":"f5bc4834045108c9","toSide":"right"},
+		{"id":"c1372f402160d356","fromNode":"c7abe846149066af","fromSide":"left","toNode":"ee01fb8220604881","toSide":"bottom"},
+		{"id":"3fadf8db18a379f5","fromNode":"c7abe846149066af","fromSide":"left","toNode":"70eca39b1ad044a8","toSide":"bottom"},
+		{"id":"2ae93c7df2e0169b","fromNode":"c7abe846149066af","fromSide":"left","toNode":"f5bc4834045108c9","toSide":"bottom"},
+		{"id":"23265f98cd96e6d2","fromNode":"0f244724934df5a2","fromSide":"left","toNode":"0912eb509475ac25","toSide":"right"},
+		{"id":"ac34eecd96c8b19c","fromNode":"e6277f443a77fa5a","fromSide":"left","toNode":"f5bc4834045108c9","toSide":"right"},
+		{"id":"9b03d6264332e5a6","fromNode":"70eca39b1ad044a8","fromSide":"left","toNode":"0912eb509475ac25","toSide":"right"}
+	]
+}
