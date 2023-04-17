@@ -23,7 +23,7 @@ class Qu2sApp extends StatelessWidget {
           primaryColor: Colors.white,
           fontFamily: "Roboto",
           scrollbarTheme: const ScrollbarThemeData(
-            thumbColor: MaterialStatePropertyAll(Color(0xff888888)),
+            thumbColor: MaterialStatePropertyAll(Color(0xff444444)),
             minThumbLength: 30,
             trackVisibility: MaterialStatePropertyAll(false),
           )),
