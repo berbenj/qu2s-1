@@ -61,10 +61,13 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            body: const TabBarView(children: [
-              HomePage(title: 'Home Page'),
-              CalendarPage(),
-            ]),
+            body: const TabBarView(
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                HomePage(title: 'Home Page'),
+                CalendarPage(),
+              ],
+            ),
           )),
       //const HomePage(title: 'Home Page'),
     );
