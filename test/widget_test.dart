@@ -15,7 +15,7 @@ import 'package:qu2s/main.dart';
 void main() {
   testWidgets('app starts up', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    MyApp myApp = const MyApp();
+    Qu2sApp myApp = const Qu2sApp();
     await tester.pumpWidget(myApp);
     await tester.pump();
 

@@ -3,12 +3,14 @@ import 'package:ntp/ntp.dart';
 import 'package:flutter/material.dart';
 import 'package:dart_date/dart_date.dart';
 
+import 'q2_date.dart';
+
 void main() async {
-  runApp(const MyApp());
+  runApp(const Qu2sApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Qu2sApp extends StatelessWidget {
+  const Qu2sApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -21,55 +23,62 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.white,
           fontFamily: "Roboto",
           scrollbarTheme: const ScrollbarThemeData(
-            thumbColor: MaterialStatePropertyAll(Color(0xff888888)),
+            thumbColor: MaterialStatePropertyAll(Color(0xff444444)),
             minThumbLength: 30,
             trackVisibility: MaterialStatePropertyAll(false),
           )),
       home: DefaultTabController(
           length: 2,
           child: Scaffold(
-            appBar: AppBar(
-              elevation: 5,
-              title: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: const [
-                    Icon(Icons.signpost),
-                    Text(
-                      " qu2s",
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 18, fontFamily: "Fira code", fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              toolbarHeight: 0,
-              backgroundColor: const Color(0xFF0a0a0a),
-              bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(kBottomNavigationBarHeight),
-                child: SizedBox(
-                  width: 200,
-                  child: TabBar(
-                      indicatorSize: TabBarIndicatorSize.label,
-                      labelColor: Color(0xFFaaaaaa),
-                      labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
-                      tabs: [
-                        Tab(text: "Home"),
-                        Tab(text: "Calendar"),
-                      ]),
-                ),
-              ),
-            ),
-            body: const TabBarView(
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                HomePage(title: 'Home Page'),
-                CalendarPage(),
-              ],
-            ),
+            appBar: q2AppBar(),
+            body: q2AppBody(),
           )),
       //const HomePage(title: 'Home Page'),
+    );
+  }
+
+  TabBarView q2AppBody() {
+    return const TabBarView(
+      physics: NeverScrollableScrollPhysics(),
+      children: [
+        HomePage(title: 'Home Page'),
+        CalendarPage(),
+      ],
+    );
+  }
+
+  AppBar q2AppBar() {
+    return AppBar(
+      elevation: 5,
+      title: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: const [
+            Icon(Icons.signpost),
+            Text(
+              " qu2s",
+              style: TextStyle(color: Colors.white, fontSize: 18, fontFamily: "Fira code", fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+      toolbarHeight: 0,
+      backgroundColor: const Color(0xFF0a0a0a),
+      bottom: const PreferredSize(
+        preferredSize: Size.fromHeight(kBottomNavigationBarHeight),
+        child: SizedBox(
+          width: 200,
+          child: TabBar(
+              indicatorSize: TabBarIndicatorSize.label,
+              labelColor: Color(0xFFaaaaaa),
+              labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
+              tabs: [
+                Tab(text: "Home"),
+                Tab(text: "Calendar"),
+              ]),
+        ),
+      ),
     );
   }
 }
@@ -152,8 +161,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _b36Date = "";
-  String _b36Hour = "";
-  String _b36Minute = "";
+  String _mtArton = "";
+  String _mtJitt = "";
   String _gregorianDate = "";
   String _gregorianHour = "";
   String _gregorianMinute = "";
@@ -163,60 +172,24 @@ class _HomePageState extends State<HomePage> {
   int offset = 0;
   final ScrollController _scrollController = ScrollController();
 
-  /// sets [_b36DateTime] and [_gregorianDateTime] to [date_],
-  /// if [date_] is not provided current local time is used
   void _setCurrentDate([DateTime? date_]) {
     setState(() {
       // if no date is provided use the current time
-      date_ ??= DateTime.now();
+      date_ ??= DateTime.now().toLocalTime;
       DateTime date = date_!;
       date = date.addMilliseconds(offset);
 
-      // offset date to the b36 start of year
-      date = date.subYears(1);
-      date = date.addDays(121);
+      Q2Date qdt = Q2Date(date);
 
-      int year = date.getYear;
-      int day = date.getDayOfYear;
+      // TODO: make seperation characters costumizable
+      _b36Date = "${qdt.b36Year}-${qdt.b36Pernor}${qdt.b36Scrop}-${qdt.b36Day}";
+      _mtArton = "${qdt.mtArton}'";
+      _mtJitt = " ${qdt.mtJitt}\"";
 
-      // a b36 season consists of 91 days
-      int season = day ~/ 91;
-      day %= 91;
-      // a b36 week consists of 13 days
-      int week = day ~/ 13;
-      day %= 13;
-
-      // fromat values according to b36 standard format
-      String y = year.toRadixString(36).padLeft(3, "0");
-      String s = (season + 1).toRadixString(5).characters.last;
-      String w = (week + 1).toString();
-      String d = day.toRadixString(13);
-
-      // set class members
-
-      date = DateTime.now().toLocalTime;
-      date = date.addMilliseconds(offset);
-      int milliSeconds = (((date.hour) * 60 + date.minute) * 60 + date.second) * 1000 + date.millisecond;
-      int bigS = (milliSeconds.toDouble() / (36 * 24) * 1000).floor();
-      int miliS = bigS % 1000 ~/ 100;
-      bigS ~/= 1000;
-      // int midS = bigS % 10000;
-      // bigS ~/= 10000;
-      // int smallS = midS % 100;
-      // midS ~/= 100;
-      int midS = bigS ~/ 1000;
-      int smallS = bigS % 1000;
-
-      _b36Date = "$y/$s$w-$d";
-      _b36Hour = "${midS.toString().padLeft(2, "0")}'";
-      _b36Minute = " ${smallS.toString().padLeft(3, "0")}\"";
-      // "${date.hour.toString().padLeft(2, "0")}:${date.minute.toString().padLeft(2, "0")}:${date.second.toString().padLeft(2, "0")}";
-
-      _gregorianDate =
-          "${date.year.toString().padLeft(4, "0")}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}";
-      _gregorianHour = "${(date.hour).toString().padLeft(2, "0")}";
-      _gregorianMinute = ":${date.minute.toString().padLeft(2, "0")}";
-      _gregorianSecond = " :${date.second.toString().padLeft(2, "0")}";
+      _gregorianDate = "${qdt.grYear}-${qdt.grMonth}-${qdt.grDay}";
+      _gregorianHour = qdt.sdHour;
+      _gregorianMinute = ":${qdt.sdMinute}";
+      _gregorianSecond = " :${qdt.sdSecond}";
     });
   }
 
@@ -244,10 +217,6 @@ class _HomePageState extends State<HomePage> {
     _setCurrentDate();
 
     return Scaffold(
-      // body: WebSmoothScroll(
-      //   scrollOffset: 10,
-      //   controller: _scrollController,
-      //   animationDuration: 50,
       body: Scrollbar(
         thumbVisibility: true,
         controller: _scrollController,
@@ -265,59 +234,11 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          children: [
-                            Text(
-                              _gregorianDate,
-                              style: TextStyle(color: _textColor, fontSize: 20, fontWeight: FontWeight.w300),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _gregorianHour,
-                                  style: TextStyle(color: _textColor, fontSize: 34, fontWeight: FontWeight.w900),
-                                ),
-                                Text(
-                                  _gregorianMinute,
-                                  style: TextStyle(color: _textColor, fontSize: 34, fontWeight: FontWeight.w300),
-                                ),
-                                Text(
-                                  _gregorianSecond,
-                                  style: TextStyle(
-                                      color: _textColor, fontSize: 20, fontWeight: FontWeight.w300, height: 1.4),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                        gregorianClock(),
                         const SizedBox(width: 30),
-                        Column(
-                          children: [
-                            Text(
-                              _b36Date,
-                              style: TextStyle(color: _textColor, fontSize: 20, fontWeight: FontWeight.w300),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _b36Hour,
-                                  style: TextStyle(color: _textColor, fontSize: 34, fontWeight: FontWeight.w900),
-                                ),
-                                Text(
-                                  _b36Minute,
-                                  style: TextStyle(
-                                      color: _textColor, fontSize: 20, fontWeight: FontWeight.w300, height: 1.4),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                        b36Clock(),
                       ]),
                 ),
-                // post("Datetime right now:",
-                // ["B36 Local Time:\n$_b36DateTime", "Gregorian Local Time:\n$_gregorianDateTime"]),
                 post("1k6/33-c", [
                   "First of all, unfortuniatly I didn't manage to progress much these times. Partly because of work, partly because of my own lazyness getting the best of me. But still I will write down the little progress I made these 2 scrop.",
                   "I decided to post a scroply update, in a devblog style. I will do this as part of me ending the sprint by presenting the developments of that sprint to the stakeholders. It will mean a consistent update for anyone who is following the project, and a good motivation to not drift off and have something that I can actually present at the end of each sprint. (also, I'm aligning the sprints with scrops)",
@@ -345,6 +266,58 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  Column b36Clock() {
+    return Column(
+      children: [
+        Text(
+          _b36Date,
+          style: TextStyle(color: _textColor, fontSize: 20, fontWeight: FontWeight.w300),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _mtArton,
+              style: TextStyle(color: _textColor, fontSize: 34, fontWeight: FontWeight.w900),
+            ),
+            Text(
+              _mtJitt,
+              style: TextStyle(color: _textColor, fontSize: 20, fontWeight: FontWeight.w300, height: 1.4),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Column gregorianClock() {
+    return Column(
+      children: [
+        Text(
+          _gregorianDate,
+          style: TextStyle(color: _textColor, fontSize: 20, fontWeight: FontWeight.w300),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _gregorianHour,
+              style: TextStyle(color: _textColor, fontSize: 34, fontWeight: FontWeight.w900),
+            ),
+            Text(
+              _gregorianMinute,
+              style: TextStyle(color: _textColor, fontSize: 34, fontWeight: FontWeight.w300),
+            ),
+            Text(
+              _gregorianSecond,
+              style: TextStyle(color: _textColor, fontSize: 20, fontWeight: FontWeight.w300, height: 1.4),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
