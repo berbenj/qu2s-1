@@ -1,9 +1,6 @@
 name: qu2s
-description: A new Flutter project.
-
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+description: A new platform.
+publish_to: 'none'
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -17,7 +14,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 0.1.2
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
@@ -34,7 +31,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   dart_date: ^1.1.1
   ntp: ^2.0.0
-  firebase_for_all: ^0.1.1
+  firedart: ^0.9.1+1
+  firebase_core: ^2.10.0
+  firebase_auth: ^4.4.2
+  cloud_firestore: ^4.5.2
+  provider: ^6.0.5
 dependency_overrides:
 
 dev_dependencies:
@@ -100,6 +101,3 @@ flutter:
           weight: 700
         - asset: fonts/Roboto-Black.ttf
           weight: 900
-
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages

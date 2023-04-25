@@ -45,3 +45,7 @@ app.*.map.json
 
 # coverage
 /coverage
+
+# generated files
+generated*.*
+Generated*.*
