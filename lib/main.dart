@@ -1,11 +1,25 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ntp/ntp.dart';
 import 'package:flutter/material.dart';
 import 'package:dart_date/dart_date.dart';
+import 'package:firedart/firedart.dart' as fd;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as fs;
+import 'firebase_options.dart';
 
 import 'q2_date.dart';
 
-void main() async {
+void main() {
+  if (kIsWeb) {
+    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  } else if (defaultTargetPlatform == TargetPlatform.windows) {
+    fd.Firestore.initialize('qu2s-e9232');
+  } else {
+    return;
+    // todo...
+  }
   runApp(const Qu2sApp());
 }
 
@@ -93,10 +107,16 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  Widget? event;
-
   @override
   Widget build(BuildContext context) {
+    late CollectionReference eventCollectionWeb;
+    late fd.CollectionReference eventCollection;
+    if (kIsWeb) {
+      eventCollectionWeb = fs.FirebaseFirestore.instance.collection("event_test");
+    } else if (defaultTargetPlatform == TargetPlatform.windows) {
+      eventCollection = fd.Firestore.instance.collection("event_test");
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -107,14 +127,12 @@ class _CalendarPageState extends State<CalendarPage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey),
               ),
-              onPressed: () {
-                setState(() {
-                  event = Container(
-                    width: 180,
-                    height: 180,
-                    decoration: const BoxDecoration(color: Colors.orange),
-                  );
-                });
+              onPressed: () async {
+                if (kIsWeb || defaultTargetPlatform == TargetPlatform.android) {
+                  await eventCollectionWeb.doc("event").update({"is_event": true});
+                } else if (defaultTargetPlatform == TargetPlatform.windows) {
+                  await eventCollection.document("event").update({"is_event": true});
+                }
               },
               child: const Text('Add event'),
             ),
@@ -123,10 +141,12 @@ class _CalendarPageState extends State<CalendarPage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey),
               ),
-              onPressed: () {
-                setState(() {
-                  event = null;
-                });
+              onPressed: () async {
+                if (kIsWeb || defaultTargetPlatform == TargetPlatform.android) {
+                  await eventCollectionWeb.doc("event").update({"is_event": false});
+                } else if (defaultTargetPlatform == TargetPlatform.windows) {
+                  await eventCollection.document("event").update({"is_event": false});
+                }
               },
               child: const Text('Remove event'),
             ),
@@ -143,7 +163,34 @@ class _CalendarPageState extends State<CalendarPage> {
                   right: BorderSide(color: Color(0xFFffffff)))),
           height: 200,
           width: 200,
-          child: Center(child: event),
+          child: Center(
+              child: (kIsWeb)
+                  ? StreamBuilder(
+                      stream: eventCollectionWeb.doc("event").snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData && (snapshot.data!.data() as Map<String, dynamic>)["is_event"]) {
+                          return Container(
+                            width: 180,
+                            height: 180,
+                            decoration: const BoxDecoration(color: Colors.orange),
+                          );
+                        }
+                        return Container();
+                      },
+                    )
+                  : StreamBuilder(
+                      stream: eventCollection.document("event").stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData && snapshot.data!["is_event"]) {
+                          return Container(
+                            width: 180,
+                            height: 180,
+                            decoration: const BoxDecoration(color: Colors.orange),
+                          );
+                        }
+                        return Container();
+                      },
+                    )),
         ),
       ],
     );
