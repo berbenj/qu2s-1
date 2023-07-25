@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "software requirement specification.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               }
             }
@@ -57,13 +57,20 @@
                 "sortOrder": "alphabetical"
               }
             }
+          },
+          {
+            "id": "db2c571d0bb47a81",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 308.5,
-    "collapsed": true
+    "width": 308.5
   },
   "right": {
     "id": "6f4ac82d39c94bfb",
@@ -141,11 +148,11 @@
   "active": "77b0902c04f51727",
   "lastOpenFiles": [
     "qu2s.canvas",
+    "software requirement specification.md",
     "Untitled.canvas",
     "Untitled.md",
     "Untitled Diagram.svg",
     "schedule.md",
-    "software requirement specification.md",
     "development cycle.md",
     "general.canvas",
     "Untitled 1.canvas"
