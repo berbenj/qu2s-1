@@ -14,6 +14,9 @@ import 'pages/timeline.dart';
 
 Q2Platform q2Platform = Q2Platform();
 
+// todo: move this to a app config
+const String version = 'v0.0.0-0.1';
+
 void main() {
   connectToDatabase();
   runApp(const Qu2sApp());
@@ -42,6 +45,8 @@ void connectToDatabase() async {
   }
 
   final auth = fd.FirebaseAuth.instance;
+
+  // todo: move this to a user data folder
   await auth.signIn('dev@qu2s.com', 'bravebluequantumduck');
 }
 
@@ -56,30 +61,19 @@ class Qu2sApp extends StatelessWidget {
     return StreamBuilder(
       stream: auth.signInState,
       builder: (context, snapshot) {
-        final List<Widget> pageNames;
-        final List<Widget> pages;
+        final Map<String, Widget> pages;
         if (auth.isSignedIn) {
-          pageNames = [
-            const Tab(text: 'Home'),
-            const Tab(text: 'Task'),
-            const Tab(text: 'Timeline'),
-            const Tab(text: 'Logout'),
-          ];
-          pages = [
-            const HomePage(),
-            const TaskPage(),
-            const TimelinePage(),
-            const LoginPage(),
-          ];
+          pages = {
+            'Home': const HomePage(),
+            'Task': const TaskPage(),
+            'Timeline': const TimelinePage(),
+            'Logout': const LoginPage(),
+          };
         } else {
-          pageNames = [
-            const Tab(text: 'Home'),
-            const Tab(text: 'Login'),
-          ];
-          pages = [
-            const HomePage(),
-            const LoginPage(),
-          ];
+          pages = {
+            'Home': const HomePage(),
+            'Login': const LoginPage(),
+          };
         }
 
         return MaterialApp(
@@ -95,19 +89,82 @@ class Qu2sApp extends StatelessWidget {
               colorSchemeSeed: const Color.fromARGB(255, 125, 118, 129),
               fontFamily: 'Fira Code'),
           themeMode: ThemeMode.dark,
-          home: DefaultTabController(
-            length: pages.length,
-            child: Scaffold(
-              appBar: q2AppBar(pageNames, auth.isSignedIn),
-              body: q2AppBody(pages),
+          home: Stack(children: [
+            DefaultTabController(
+              length: pages.length,
+              child: Scaffold(
+                appBar: q2AppBar(pages.keys, auth.isSignedIn),
+                body: q2AppBody(pages.values),
+              ),
             ),
-          ),
+            const Positioned(
+                child: Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 14),
+                  child: Icon(
+                    Icons.signpost,
+                    size: 40,
+                    shadows: [
+                      Shadow(
+                          color: Color.fromARGB(143, 255, 255, 255),
+                          blurRadius: 10)
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5, top: 0),
+                  child: Text(
+                    'qu2s',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40,
+                      decoration: TextDecoration.none,
+                      shadows: [
+                        Shadow(
+                            color: Color.fromARGB(143, 255, 255, 255),
+                            blurRadius: 10)
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5, top: 18),
+                  child: Text(
+                    'indev',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 20,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ),
+              ],
+            )),
+            const Positioned(
+                bottom: 0,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 5),
+                  child: Text(
+                    version,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Fira Code',
+                      fontWeight: FontWeight.normal,
+                      fontSize: 10,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ))
+          ]),
         );
       },
     );
   }
 
-  AppBar q2AppBar(List<Widget> pageNames, bool isSignedIn) {
+  AppBar q2AppBar(Iterable<String> pages, bool isSignedIn) {
     return AppBar(
       elevation: 5,
       toolbarHeight: 0,
@@ -122,17 +179,17 @@ class Qu2sApp extends StatelessWidget {
             labelStyle:
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-            tabs: pageNames,
+            tabs: [for (var page in pages) Tab(text: page)],
           ),
         ),
       ),
     );
   }
 
-  TabBarView q2AppBody(List<Widget> pages) {
+  TabBarView q2AppBody(Iterable<Widget> pages) {
     return TabBarView(
       physics: const NeverScrollableScrollPhysics(),
-      children: pages,
+      children: pages.toList(),
     );
   }
 }
