@@ -27,17 +27,18 @@ class Q2Date {
   int _mtJitt = 0;
 
   Q2Date(DateTime dt) {
+    // ignore: prefer_initializing_formals
     this.dt = dt;
 
-    _grYear = dt.getYear;
-    _grMonth = dt.getMonth;
-    _grDay = dt.getDay;
+    _grYear = dt.year;
+    _grMonth = dt.month;
+    _grDay = dt.day;
 
     DateTime date = dt;
     // offset date to the b36 start of year
     date = date.subYears(1);
     date = date.addDays(121);
-    _b36Year = date.getYear;
+    _b36Year = date.year;
     _b36Day = date.getDayOfYear;
     // a b36 season consists of 91 days
     _b36Pernor = _b36Day ~/ 91;
@@ -53,7 +54,9 @@ class Q2Date {
     _sdMicroSecond = dt.microsecond;
 
     date = dt;
-    int milliSeconds = (((date.hour) * 60 + date.minute) * 60 + date.second) * 1000 + date.millisecond;
+    int milliSeconds =
+        (((date.hour) * 60 + date.minute) * 60 + date.second) * 1000 +
+            date.millisecond;
     int bigS = (milliSeconds.toDouble() / (36 * 24) * 1000).floor();
     bigS ~/= 1000;
     _mtArton = bigS ~/ 1000;
@@ -61,19 +64,19 @@ class Q2Date {
   }
 
   String get grYear {
-    return _grYear.toString().padLeft(4, "0");
+    return _grYear.toString().padLeft(4, '0');
   }
 
   String get grMonth {
-    return _grMonth.toString().padLeft(2, "0");
+    return _grMonth.toString().padLeft(2, '0');
   }
 
   String get grDay {
-    return _grDay.toString().padLeft(2, "0");
+    return _grDay.toString().padLeft(2, '0');
   }
 
   String get b36Year {
-    return _b36Year.toRadixString(36).padLeft(3, "0");
+    return _b36Year.toRadixString(36).padLeft(3, '0');
   }
 
   String get b36Pernor {
@@ -89,30 +92,30 @@ class Q2Date {
   }
 
   String get sdHour {
-    return _sdHour.toString().padLeft(2, "0");
+    return _sdHour.toString().padLeft(2, '0');
   }
 
   String get sdMinute {
-    return _sdMinute.toString().padLeft(2, "0");
+    return _sdMinute.toString().padLeft(2, '0');
   }
 
   String get sdSecond {
-    return _sdSecond.toString().padLeft(2, "0");
+    return _sdSecond.toString().padLeft(2, '0');
   }
 
   String get sdMilliSecond {
-    return _sdMilliSecond.toString().padLeft(3, "0");
+    return _sdMilliSecond.toString().padLeft(3, '0');
   }
 
   String get sdMicroSecond {
-    return _sdMicroSecond.toString().padLeft(3, "0");
+    return _sdMicroSecond.toString().padLeft(3, '0');
   }
 
   String get mtArton {
-    return _mtArton.toString().padLeft(2, "0");
+    return _mtArton.toString().padLeft(2, '0');
   }
 
   String get mtJitt {
-    return _mtJitt.toString().padLeft(3, "0");
+    return _mtJitt.toString().padLeft(3, '0');
   }
 }
