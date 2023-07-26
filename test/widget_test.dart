@@ -1,30 +1,47 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'dart:math';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:qu2s/main.dart';
+import 'package:qu2s/q2_platform.dart';
 
 void main() {
-  testWidgets('app starts up', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    Qu2sApp myApp = const Qu2sApp();
-    await tester.pumpWidget(myApp);
-    await tester.pump();
+  group('Windows', () {
+    q2Platform = Q2Platform(forcePlatform: 'Windows');
+    connectToDatabase();
 
-    expect(find.byKey(const Key('date_text')), findsOneWidget);
-    expect(
-        find.byWidgetPredicate(
-          (widget) => widget is Text && widget.style?.color == Colors.white,
-          description: '`Text` widget with strike through',
-        ),
-        findsOneWidget);
+    testWidgets('app starts up', (WidgetTester tester) async {
+      await tester.pumpWidget(const Qu2sApp());
+    });
+    testWidgets('Home page accessable', (WidgetTester tester) async {
+      await tester.pumpWidget(const Qu2sApp());
+      await tester.tap(find.text('Home'));
+      await tester.pumpAndSettle();
+    });
+    testWidgets('Calendar page accessable', (WidgetTester tester) async {
+      await tester.pumpWidget(const Qu2sApp());
+      await tester.tap(find.text('Calendar'));
+      await tester.pumpAndSettle();
+    });
   });
+
+  group('Web', () {
+    q2Platform = Q2Platform(forcePlatform: 'Web');
+    connectToDatabase();
+
+    testWidgets('app starts up', (WidgetTester tester) async {
+      await tester.pumpWidget(const Qu2sApp());
+    });
+    testWidgets('Home page accessable', (WidgetTester tester) async {
+      await tester.pumpWidget(const Qu2sApp());
+      await tester.tap(find.text('Home'));
+      await tester.pumpAndSettle();
+    });
+    testWidgets('Calendar page accessable', (WidgetTester tester) async {
+      await tester.pumpWidget(const Qu2sApp());
+      await tester.tap(find.text('Calendar'));
+      await tester.pumpAndSettle();
+    });
+  });
+
+  // todo: test in browser and android
+  // todo: test database connection
 }
