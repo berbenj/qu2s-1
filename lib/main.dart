@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firedart/auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firedart/firedart.dart' as fd;
@@ -98,52 +100,6 @@ class Qu2sApp extends StatelessWidget {
               ),
             ),
             const Positioned(
-                child: Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 14),
-                  child: Icon(
-                    Icons.signpost,
-                    size: 40,
-                    shadows: [
-                      Shadow(
-                          color: Color.fromARGB(143, 255, 255, 255),
-                          blurRadius: 10)
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 5, top: 0),
-                  child: Text(
-                    'qu2s',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40,
-                      decoration: TextDecoration.none,
-                      shadows: [
-                        Shadow(
-                            color: Color.fromARGB(143, 255, 255, 255),
-                            blurRadius: 10)
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 5, top: 18),
-                  child: Text(
-                    'indev',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 20,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                ),
-              ],
-            )),
-            const Positioned(
                 bottom: 0,
                 child: Padding(
                   padding: EdgeInsets.only(left: 5),
@@ -157,7 +113,14 @@ class Qu2sApp extends StatelessWidget {
                       decoration: TextDecoration.none,
                     ),
                   ),
-                ))
+                )),
+            Positioned(
+              top: -78,
+              child: Image.file(
+                File('img/logo.png'),
+                scale: 5,
+              ),
+            ),
           ]),
         );
       },
