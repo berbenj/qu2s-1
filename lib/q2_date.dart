@@ -15,16 +15,16 @@ class Q2Date {
   int _b36Scrop = 0;
   int _b36Day = 0;
 
-  // sectodecimal time
+  // 24/60 time
   int _sdHour = 0;
   int _sdMinute = 0;
   int _sdSecond = 0;
   int _sdMilliSecond = 0;
   int _sdMicroSecond = 0;
 
-  // metric time
-  int _mtArton = 0;
-  int _mtJitt = 0;
+  // q-decimal time
+  int _qdArton = 0;
+  int _qdJitt = 0;
 
   Q2Date(DateTime dt) {
     // ignore: prefer_initializing_formals
@@ -54,13 +54,11 @@ class Q2Date {
     _sdMicroSecond = dt.microsecond;
 
     date = dt;
-    int milliSeconds =
-        (((date.hour) * 60 + date.minute) * 60 + date.second) * 1000 +
-            date.millisecond;
+    int milliSeconds = (((date.hour) * 60 + date.minute) * 60 + date.second) * 1000 + date.millisecond;
     int bigS = (milliSeconds.toDouble() / (36 * 24) * 1000).floor();
     bigS ~/= 1000;
-    _mtArton = bigS ~/ 1000;
-    _mtJitt = bigS % 1000;
+    _qdArton = bigS ~/ 1000;
+    _qdJitt = bigS % 1000;
   }
 
   String get grYear {
@@ -111,11 +109,11 @@ class Q2Date {
     return _sdMicroSecond.toString().padLeft(3, '0');
   }
 
-  String get mtArton {
-    return _mtArton.toString().padLeft(2, '0');
+  String get qdArton {
+    return _qdArton.toString().padLeft(2, '0');
   }
 
-  String get mtJitt {
-    return _mtJitt.toString().padLeft(3, '0');
+  String get qdJitt {
+    return _qdJitt.toString().padLeft(3, '0');
   }
 }

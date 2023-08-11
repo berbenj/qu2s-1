@@ -82,10 +82,9 @@ class _TasksListState extends State<TasksList> {
 
   @override
   Widget build(BuildContext context) {
-    fd.CollectionReference tasksCollection =
-        fd.Firestore.instance.collection('tasks/${auth.userId}/tasks');
+    fd.CollectionReference tasksCollection = fd.Firestore.instance.collection('tasks/${auth.userId}/tasks');
 
-    // todo: remove this hack: of having a FutureBuilder in a StreamBbuilder
+    // idea: remove this hack: of having a FutureBuilder in a StreamBbuilder
     return StreamBuilder(
       stream: tasksCollection.stream,
       builder: (c, s) {
@@ -97,7 +96,7 @@ class _TasksListState extends State<TasksList> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
-                    child: ElevatedButton(
+                    child: OutlinedButton(
                         onPressed: () {
                           setState(() {
                             widget.callback('add');
@@ -109,9 +108,7 @@ class _TasksListState extends State<TasksList> {
                 for (var i in snapshot.data!)
                   ListTile(
                     title: Text(i['title']),
-                    tileColor: i.id == widget.id
-                        ? const Color.fromARGB(50, 255, 255, 255)
-                        : null,
+                    tileColor: i.id == widget.id ? const Color.fromARGB(50, 255, 255, 255) : null,
                     onTap: () {
                       setState(() {
                         widget.callback(i.id);
@@ -124,7 +121,7 @@ class _TasksListState extends State<TasksList> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
-                    child: ElevatedButton(
+                    child: OutlinedButton(
                         onPressed: () {
                           setState(() {
                             widget.callback('add');
@@ -170,11 +167,16 @@ class _TaskDetailState extends State<TaskDetail> {
   var endDate = TextEditingController();
   var endTime = TextEditingController();
   var lengthInMinutes = TextEditingController();
+  var repeating = false;
+  var repeateEveryXHour = TextEditingController();
+  var numOfEvents = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    fd.CollectionReference taskCollection =
-        fd.Firestore.instance.collection('tasks/${auth.userId}/tasks');
+    // idea: plase make the paths better looking, pls
+    fd.CollectionReference taskCollection = fd.Firestore.instance.collection('tasks/${auth.userId}/tasks');
+    fd.CollectionReference eventCollection = fd.Firestore.instance.collection('events/${auth.userId}/events');
+    fd.DocumentReference eventDoc = fd.Firestore.instance.document('events/${auth.userId}');
 
     List<String> data = widget.id.split(';');
     if (data[0] == 'add') {
@@ -185,8 +187,7 @@ class _TaskDetailState extends State<TaskDetail> {
             children: [
               TextFormField(
                 controller: title,
-                decoration: const InputDecoration(
-                    icon: Icon(Icons.title), labelText: 'Title'),
+                decoration: const InputDecoration(icon: Icon(Icons.title), labelText: 'Title'),
                 validator: (value) {
                   if (value == null || value == '') {
                     return 'Please provide a title';
@@ -199,8 +200,7 @@ class _TaskDetailState extends State<TaskDetail> {
                   controller: description,
                   minLines: 1,
                   maxLines: 10,
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.description), labelText: 'Description'),
+                  decoration: const InputDecoration(icon: Icon(Icons.description), labelText: 'Description'),
                   validator: (value) {
                     return null;
                   }),
@@ -210,9 +210,7 @@ class _TaskDetailState extends State<TaskDetail> {
                     flex: 1,
                     child: TextFormField(
                       controller: startDate,
-                      decoration: const InputDecoration(
-                          icon: Icon(Icons.calendar_today),
-                          labelText: 'Start date'),
+                      decoration: const InputDecoration(icon: Icon(Icons.calendar_today), labelText: 'Start date'),
                       readOnly: true,
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
@@ -222,17 +220,9 @@ class _TaskDetailState extends State<TaskDetail> {
                             lastDate: DateTime(2101));
                         setState(() {
                           if (pickedDate != null) {
-                            startDateTime = DateTime(
-                                pickedDate.year,
-                                pickedDate.month,
-                                pickedDate.day,
-                                startDateTime.hour,
-                                startDateTime.minute,
-                                0,
-                                0,
-                                0);
-                            startDate.text =
-                                '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
+                            startDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day,
+                                startDateTime.hour, startDateTime.minute, 0, 0, 0);
+                            startDate.text = '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
                           }
                         });
                       },
@@ -249,27 +239,16 @@ class _TaskDetailState extends State<TaskDetail> {
                     flex: 1,
                     child: TextFormField(
                       controller: startTime,
-                      decoration: const InputDecoration(
-                          icon: Icon(Icons.access_time),
-                          labelText: 'Start time'),
+                      decoration: const InputDecoration(icon: Icon(Icons.access_time), labelText: 'Start time'),
                       readOnly: true,
                       onTap: () async {
-                        TimeOfDay? pickedTime = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.fromDateTime(startDateTime));
+                        TimeOfDay? pickedTime =
+                            await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(startDateTime));
                         setState(() {
                           if (pickedTime != null) {
-                            startDateTime = DateTime(
-                                startDateTime.year,
-                                startDateTime.month,
-                                startDateTime.day,
-                                pickedTime.hour,
-                                pickedTime.minute,
-                                0,
-                                0,
-                                0);
-                            startTime.text =
-                                '${pickedTime.hour}:${pickedTime.minute}';
+                            startDateTime = DateTime(startDateTime.year, startDateTime.month, startDateTime.day,
+                                pickedTime.hour, pickedTime.minute, 0, 0, 0);
+                            startTime.text = '${pickedTime.hour}:${pickedTime.minute}';
                           }
                         });
                       },
@@ -290,9 +269,7 @@ class _TaskDetailState extends State<TaskDetail> {
                     flex: 1,
                     child: TextFormField(
                       controller: endDate,
-                      decoration: const InputDecoration(
-                          icon: Icon(Icons.calendar_today),
-                          labelText: 'End date'),
+                      decoration: const InputDecoration(icon: Icon(Icons.calendar_today), labelText: 'End date'),
                       readOnly: true,
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
@@ -302,17 +279,9 @@ class _TaskDetailState extends State<TaskDetail> {
                             lastDate: DateTime(2101));
                         setState(() {
                           if (pickedDate != null) {
-                            endDateTime = DateTime(
-                                pickedDate.year,
-                                pickedDate.month,
-                                pickedDate.day,
-                                endDateTime.hour,
-                                endDateTime.minute,
-                                0,
-                                0,
-                                0);
-                            endDate.text =
-                                '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
+                            endDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, endDateTime.hour,
+                                endDateTime.minute, 0, 0, 0);
+                            endDate.text = '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
                           }
                         });
                       },
@@ -329,26 +298,16 @@ class _TaskDetailState extends State<TaskDetail> {
                     flex: 1,
                     child: TextFormField(
                       controller: endTime,
-                      decoration: const InputDecoration(
-                          icon: Icon(Icons.access_time), labelText: 'End time'),
+                      decoration: const InputDecoration(icon: Icon(Icons.access_time), labelText: 'End time'),
                       readOnly: true,
                       onTap: () async {
-                        TimeOfDay? pickedTime = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.fromDateTime(endDateTime));
+                        TimeOfDay? pickedTime =
+                            await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(endDateTime));
                         setState(() {
                           if (pickedTime != null) {
-                            endDateTime = DateTime(
-                                endDateTime.year,
-                                endDateTime.month,
-                                endDateTime.day,
-                                pickedTime.hour,
-                                pickedTime.minute,
-                                0,
-                                0,
-                                0);
-                            endTime.text =
-                                '${pickedTime.hour}:${pickedTime.minute}';
+                            endDateTime = DateTime(endDateTime.year, endDateTime.month, endDateTime.day,
+                                pickedTime.hour, pickedTime.minute, 0, 0, 0);
+                            endTime.text = '${pickedTime.hour}:${pickedTime.minute}';
                           }
                         });
                       },
@@ -365,12 +324,8 @@ class _TaskDetailState extends State<TaskDetail> {
               ),
               TextFormField(
                 controller: lengthInMinutes,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                decoration: const InputDecoration(
-                    icon: Icon(Icons.timelapse),
-                    labelText: 'Length (in minutes)'),
+                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                decoration: const InputDecoration(icon: Icon(Icons.timelapse), labelText: 'Length (in minutes)'),
                 validator: (value) {
                   if (value == null || value == '') {
                     return 'Please provide a length';
@@ -379,17 +334,54 @@ class _TaskDetailState extends State<TaskDetail> {
                   }
                 },
               ),
+              Row(
+                children: [
+                  Expanded(
+                    child: CheckboxListTile(
+                        value: repeating,
+                        title: const Text('Repeateing task'),
+                        checkColor: Colors.black,
+                        onChanged: (value) {
+                          setState(() {
+                            repeating = value!;
+                          });
+                        }),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      controller: repeateEveryXHour,
+                      decoration: const InputDecoration(icon: Icon(Icons.repeat), labelText: 'repeate every (hour)'),
+                    ),
+                  )
+                ],
+              ),
               const SizedBox(height: 30),
-              ElevatedButton(
-                  onPressed: () {
+              OutlinedButton(
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      taskCollection.add({
+                      var event = await eventCollection.add({
+                        'title': title.text,
+                        'description': description.text,
+                        'minStartDateTime': startDateTime,
+                        'maxEndDateTime': endDateTime,
+                        'startDateTime': null,
+                        'endDateTime': null,
+                        'lengthInMinutes': int.parse(lengthInMinutes.text),
+                        'repeating': repeating,
+                        'done': false,
+                        'lastDone': null,
+                        'repeateEveryXHour': repeateEveryXHour.text.isEmpty ? null : int.parse(repeateEveryXHour.text),
+                      });
+                      await taskCollection.add({
                         'title': title.text,
                         'description': description.text,
                         'startDateTime': startDateTime,
                         'endDateTime': endDateTime,
                         'lengthInMinutes': int.parse(lengthInMinutes.text),
+                        'repeating': repeating,
+                        'events': [event.id],
                       });
+                      await eventDoc.update({'needsReschedule': true});
                       setState(() {
                         title.clear();
                         description.clear();
@@ -400,6 +392,8 @@ class _TaskDetailState extends State<TaskDetail> {
                         endDate.clear();
                         endTime.clear();
                         lengthInMinutes.clear();
+                        repeating = false;
+                        repeateEveryXHour.clear();
                       });
                     }
                   },
@@ -415,14 +409,13 @@ class _TaskDetailState extends State<TaskDetail> {
           title.text = s.data!['title'];
           description.text = s.data!['description'];
           startDateTime = s.data!['startDateTime'];
-          startDate.text =
-              '${startDateTime.year}-${startDateTime.month}-${startDateTime.day}';
+          startDate.text = '${startDateTime.year}-${startDateTime.month}-${startDateTime.day}';
           startTime.text = '${startDateTime.hour}:${startDateTime.minute}';
           endDateTime = s.data!['endDateTime'];
-          endDate.text =
-              '${endDateTime.year}-${endDateTime.month}-${endDateTime.day}';
+          endDate.text = '${endDateTime.year}-${endDateTime.month}-${endDateTime.day}';
           endTime.text = '${endDateTime.hour}:${endDateTime.minute}';
           lengthInMinutes.text = s.data!['lengthInMinutes'].toString();
+          repeating = s.data!['repeating'];
 
           return SingleChildScrollView(
             child: Form(
@@ -431,8 +424,7 @@ class _TaskDetailState extends State<TaskDetail> {
                 children: [
                   TextFormField(
                     controller: title,
-                    decoration: const InputDecoration(
-                        icon: Icon(Icons.title), labelText: 'Title'),
+                    decoration: const InputDecoration(icon: Icon(Icons.title), labelText: 'Title'),
                     validator: (value) {
                       if (value == null || value == '') {
                         return 'Please provide a title';
@@ -445,9 +437,7 @@ class _TaskDetailState extends State<TaskDetail> {
                       controller: description,
                       minLines: 1,
                       maxLines: 10,
-                      decoration: const InputDecoration(
-                          icon: Icon(Icons.description),
-                          labelText: 'Description'),
+                      decoration: const InputDecoration(icon: Icon(Icons.description), labelText: 'Description'),
                       validator: (value) {
                         return null;
                       }),
@@ -457,9 +447,7 @@ class _TaskDetailState extends State<TaskDetail> {
                         flex: 1,
                         child: TextFormField(
                           controller: startDate,
-                          decoration: const InputDecoration(
-                              icon: Icon(Icons.calendar_today),
-                              labelText: 'Start date'),
+                          decoration: const InputDecoration(icon: Icon(Icons.calendar_today), labelText: 'Start date'),
                           readOnly: true,
                           onTap: () async {
                             DateTime? pickedDate = await showDatePicker(
@@ -468,21 +456,13 @@ class _TaskDetailState extends State<TaskDetail> {
                                 firstDate: DateTime(2000),
                                 lastDate: DateTime(2101));
                             if (pickedDate != null) {
-                              startDateTime = DateTime(
-                                  pickedDate.year,
-                                  pickedDate.month,
-                                  pickedDate.day,
-                                  startDateTime.hour,
-                                  startDateTime.minute,
-                                  0,
-                                  0,
-                                  0);
-                              startDate.text =
-                                  '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
+                              startDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day,
+                                  startDateTime.hour, startDateTime.minute, 0, 0, 0);
+                              startDate.text = '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
                             }
                           },
                           validator: (value) {
-                            if (value == null || value == '') {
+                            if ((value == null || value == '') && !repeating) {
                               return 'Please provide a date';
                             } else {
                               return null;
@@ -494,31 +474,19 @@ class _TaskDetailState extends State<TaskDetail> {
                         flex: 1,
                         child: TextFormField(
                           controller: startTime,
-                          decoration: const InputDecoration(
-                              icon: Icon(Icons.access_time),
-                              labelText: 'Start time'),
+                          decoration: const InputDecoration(icon: Icon(Icons.access_time), labelText: 'Start time'),
                           readOnly: true,
                           onTap: () async {
                             TimeOfDay? pickedTime = await showTimePicker(
-                                context: context,
-                                initialTime:
-                                    TimeOfDay.fromDateTime(startDateTime));
+                                context: context, initialTime: TimeOfDay.fromDateTime(startDateTime));
                             if (pickedTime != null) {
-                              startDateTime = DateTime(
-                                  startDateTime.year,
-                                  startDateTime.month,
-                                  startDateTime.day,
-                                  pickedTime.hour,
-                                  pickedTime.minute,
-                                  0,
-                                  0,
-                                  0);
-                              startTime.text =
-                                  '${pickedTime.hour}:${pickedTime.minute}';
+                              startDateTime = DateTime(startDateTime.year, startDateTime.month, startDateTime.day,
+                                  pickedTime.hour, pickedTime.minute, 0, 0, 0);
+                              startTime.text = '${pickedTime.hour}:${pickedTime.minute}';
                             }
                           },
                           validator: (value) {
-                            if (value == null || value == '') {
+                            if ((value == null || value == '') && !repeating) {
                               return 'Please provide a time';
                             } else {
                               return null;
@@ -534,9 +502,7 @@ class _TaskDetailState extends State<TaskDetail> {
                         flex: 1,
                         child: TextFormField(
                           controller: endDate,
-                          decoration: const InputDecoration(
-                              icon: Icon(Icons.calendar_today),
-                              labelText: 'End date'),
+                          decoration: const InputDecoration(icon: Icon(Icons.calendar_today), labelText: 'End date'),
                           readOnly: true,
                           onTap: () async {
                             DateTime? pickedDate = await showDatePicker(
@@ -545,21 +511,13 @@ class _TaskDetailState extends State<TaskDetail> {
                                 firstDate: DateTime(2000),
                                 lastDate: DateTime(2101));
                             if (pickedDate != null) {
-                              endDateTime = DateTime(
-                                  pickedDate.year,
-                                  pickedDate.month,
-                                  pickedDate.day,
-                                  endDateTime.hour,
-                                  endDateTime.minute,
-                                  0,
-                                  0,
-                                  0);
-                              endDate.text =
-                                  '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
+                              endDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day,
+                                  endDateTime.hour, endDateTime.minute, 0, 0, 0);
+                              endDate.text = '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
                             }
                           },
                           validator: (value) {
-                            if (value == null || value == '') {
+                            if ((value == null || value == '') && !repeating) {
                               return 'Please provide a date';
                             } else {
                               return null;
@@ -571,32 +529,20 @@ class _TaskDetailState extends State<TaskDetail> {
                         flex: 1,
                         child: TextFormField(
                           controller: endTime,
-                          decoration: const InputDecoration(
-                              icon: Icon(Icons.access_time),
-                              labelText: 'End time'),
+                          decoration: const InputDecoration(icon: Icon(Icons.access_time), labelText: 'End time'),
                           readOnly: true,
                           onTap: () async {
                             TimeOfDay? pickedTime = await showTimePicker(
-                                context: context,
-                                initialTime:
-                                    TimeOfDay.fromDateTime(endDateTime));
+                                context: context, initialTime: TimeOfDay.fromDateTime(endDateTime));
                             if (pickedTime != null) {
-                              endDateTime = DateTime(
-                                  endDateTime.year,
-                                  endDateTime.month,
-                                  endDateTime.day,
-                                  pickedTime.hour,
-                                  pickedTime.minute,
-                                  0,
-                                  0,
-                                  0);
-                              endTime.text =
-                                  '${pickedTime.hour}:${pickedTime.minute}';
+                              endDateTime = DateTime(endDateTime.year, endDateTime.month, endDateTime.day,
+                                  pickedTime.hour, pickedTime.minute, 0, 0, 0);
+                              endTime.text = '${pickedTime.hour}:${pickedTime.minute}';
                             }
                           },
                           validator: (value) {
                             // todo: make sure this is after start datetime
-                            if (value == null || value == '') {
+                            if ((value == null || value == '') && !repeating) {
                               return 'Please provide a time';
                             } else {
                               return null;
@@ -606,33 +552,105 @@ class _TaskDetailState extends State<TaskDetail> {
                       ),
                     ],
                   ),
-                  TextFormField(
-                    controller: lengthInMinutes,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: lengthInMinutes,
+                          inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                          decoration:
+                              const InputDecoration(icon: Icon(Icons.timelapse), labelText: 'Length (in minutes)'),
+                          validator: (value) {
+                            if (value == null || value == '') {
+                              return 'Please provide a length';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          controller: numOfEvents,
+                          decoration:
+                              const InputDecoration(icon: Icon(Icons.numbers_sharp), labelText: 'Number of events'),
+                        ),
+                      )
                     ],
-                    decoration: const InputDecoration(
-                        icon: Icon(Icons.timelapse),
-                        labelText: 'Length (in minutes)'),
-                    validator: (value) {
-                      if (value == null || value == '') {
-                        return 'Please provide a length';
-                      } else {
-                        return null;
-                      }
-                    },
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CheckboxListTile(
+                            value: repeating,
+                            title: const Text('Repeateing task'),
+                            checkColor: Colors.black,
+                            onChanged: (value) {
+                              setState(() {
+                                repeating = value!;
+                              });
+                            }),
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          controller: repeateEveryXHour,
+                          decoration:
+                              const InputDecoration(icon: Icon(Icons.repeat), labelText: 'Repeate every (hour)'),
+                        ),
+                      )
+                    ],
                   ),
                   const SizedBox(height: 30),
-                  ElevatedButton(
-                      onPressed: () {
+                  OutlinedButton(
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          taskCollection.document(data[1]).update({
+                          await taskCollection.document(data[1]).update({
                             'title': title.text,
                             'description': description.text,
                             'startDateTime': startDateTime,
                             'endDateTime': endDateTime,
                             'lengthInMinutes': int.parse(lengthInMinutes.text),
-                          }).then((value) => widget.callback(data[1]));
+                          });
+                          var task = await taskCollection.document(data[1]).get();
+                          var event = await eventCollection.document(task['events'][0]).get();
+                          if (startDateTime != event['minStartDateTime'] ||
+                              endDateTime != event['maxEndDateTime'] ||
+                              int.parse(lengthInMinutes.text) != event['lengthInMinutes'] ||
+                              repeating != event['repeating']) {
+                            await eventCollection.document(task['events'][0]).update({
+                              'title': title.text,
+                              'description': description.text,
+                              'minStartDateTime': startDateTime,
+                              'maxEndDateTime': endDateTime,
+                              'startDateTime': null,
+                              'endDateTime': null,
+                              'lengthInMinutes': int.parse(lengthInMinutes.text),
+                              'repeating': repeating,
+                              'repeateEveryXHour':
+                                  repeateEveryXHour.text.isEmpty ? null : int.parse(repeateEveryXHour.text),
+                              'done': false,
+                            });
+                            await eventDoc.update({'needsReschedule': true});
+                          } else {
+                            await eventCollection.document(task['events'][0]).update({
+                              'title': title.text,
+                              'description': description.text,
+                            });
+                            setState(() {
+                              title.clear();
+                              description.clear();
+                              startDateTime = DateTime.now();
+                              startDate.clear();
+                              startTime.clear();
+                              endDateTime = DateTime.now();
+                              endDate.clear();
+                              endTime.clear();
+                              lengthInMinutes.clear();
+                              repeating = false;
+                              repeateEveryXHour.clear();
+                            });
+                          }
+                          widget.callback(data[1]);
                         }
                       },
                       child: const Text('Edit task')),
@@ -647,8 +665,7 @@ class _TaskDetailState extends State<TaskDetail> {
     if (widget.id == '') {
       return const Center();
     } else {
-      fd.DocumentReference taskRef = fd.Firestore.instance
-          .document('tasks/${auth.userId}/tasks/${widget.id}');
+      fd.DocumentReference taskRef = fd.Firestore.instance.document('tasks/${auth.userId}/tasks/${widget.id}');
       Future<fd.Document> task = taskRef.get();
 
       return FutureBuilder(
@@ -661,22 +678,24 @@ class _TaskDetailState extends State<TaskDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      ElevatedButton.icon(
+                      OutlinedButton.icon(
                           onPressed: () async {
+                            await eventCollection.document(snapshot.requireData['events'][0]).delete();
                             await taskCollection.document(widget.id).delete();
                             widget.callback('');
                           },
                           icon: const Icon(Icons.delete),
-                          label: const Text('delete')),
+                          label: const Text('Delete')),
                       const SizedBox(width: 20),
-                      ElevatedButton.icon(
+                      OutlinedButton.icon(
                           onPressed: () {
                             widget.callback('edit;${widget.id}');
                           },
                           icon: const Icon(Icons.edit),
-                          label: const Text('edit')),
+                          label: const Text('Edit')),
                     ],
                   ),
+                  const SizedBox(height: 20),
                   Text(
                     task['title'],
                     style: const TextStyle(fontSize: 30),

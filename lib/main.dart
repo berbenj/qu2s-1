@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:firedart/firedart.dart' as fd;
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-// import 'package:fluent_ui/fluent_ui.dart' as fluent_ui;
 
 import 'q2_platform.dart';
 
@@ -16,46 +15,32 @@ import 'pages/timeline.dart';
 
 Q2Platform q2Platform = Q2Platform();
 
-// todo: move this to a app config
-const String version = 'v0.0.0-0.5';
+const String version = 'v0.0.0::06';
 
 void main() {
   connectToDatabase();
   runApp(const Qu2sApp());
 }
 
-// todo: extract database reletad things to a seperate libriray
-// firestore
-// - can crud all collection, all doc,
-// - can stream any collection, doc
-// - can use a fake db for testing
-// auth
-// - can do everything
-// storage
-// - can crud anything
 void connectToDatabase() async {
   if (q2Platform.isWeb) {
-    FirebaseAuth.initialize(
-        'AIzaSyCFfMcpev4TWt3yst8pNID9Qicu6vX8Q9E', fd.VolatileStore());
+    FirebaseAuth.initialize('AIzaSyCFfMcpev4TWt3yst8pNID9Qicu6vX8Q9E', fd.VolatileStore());
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   } else if (q2Platform.isWindows) {
-    fd.FirebaseAuth.initialize(
-        'AIzaSyCFfMcpev4TWt3yst8pNID9Qicu6vX8Q9E', fd.VolatileStore());
+    fd.FirebaseAuth.initialize('AIzaSyCFfMcpev4TWt3yst8pNID9Qicu6vX8Q9E', fd.VolatileStore());
     fd.Firestore.initialize('qu2s-e9232');
   } else {
-    // todo: implement for android (linux, macOS, iOS)
+    // todo: implement for android
   }
 
   final auth = fd.FirebaseAuth.instance;
 
-  // todo: move this to a user data folder
   await auth.signIn('dev@qu2s.com', 'bravebluequantumduck');
 }
 
 class Qu2sApp extends StatelessWidget {
   const Qu2sApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final auth = fd.FirebaseAuth.instance;
@@ -88,7 +73,7 @@ class Qu2sApp extends StatelessWidget {
               // --primary: #373541;
               // --secondary: #10110e;
               // --accent: #6d6a81;
-              colorSchemeSeed: const Color.fromARGB(255, 125, 118, 129),
+              colorSchemeSeed: const Color.fromARGB(255, 0, 26, 255),
               fontFamily: 'Fira Code'),
           themeMode: ThemeMode.dark,
           home: Stack(children: [
@@ -114,13 +99,7 @@ class Qu2sApp extends StatelessWidget {
                     ),
                   ),
                 )),
-            Positioned(
-              top: -78,
-              child: Image.file(
-                File('img/logo.png'),
-                scale: 5,
-              ),
-            ),
+            Positioned(top: -78, child: Image.asset('img/logo.png', scale: 5)),
           ]),
         );
       },
@@ -139,8 +118,7 @@ class Qu2sApp extends StatelessWidget {
             indicatorSize: TabBarIndicatorSize.label,
             indicatorColor: const Color.fromARGB(100, 255, 255, 255),
             indicatorPadding: const EdgeInsets.only(bottom: 7),
-            labelStyle:
-                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
             tabs: [for (var page in pages) Tab(text: page)],
           ),

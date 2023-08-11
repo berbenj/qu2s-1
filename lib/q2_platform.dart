@@ -20,6 +20,9 @@ class Q2Platform {
       _isLinux = defaultTargetPlatform == TargetPlatform.linux;
     } else {
       switch (forcePlatform.toLowerCase()) {
+        case 'windows':
+          _isWindows = true;
+          break;
         case 'web':
           _isWeb = true;
           break;
@@ -28,9 +31,6 @@ class Q2Platform {
           break;
         case 'ios':
           _isIOs = true;
-          break;
-        case 'windows':
-          _isWindows = true;
           break;
         case 'macos':
           _isMacOs = true;

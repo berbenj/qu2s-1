@@ -20,12 +20,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final auth = fd.FirebaseAuth.instance;
   String _b36Date = '';
-  String _mtArton = '';
-  String _mtJitt = '';
+  String _qdArton = '';
+  String _qdJitt = '';
   String _gregorianDate = '';
   String _gregorianHour = '';
   String _gregorianMinute = '';
   String _gregorianSecond = '';
+  String _amp = '';
+  String _12h = '';
+  String _weekday = '';
+  String _weeknum = '';
   Timer? _clockTimer;
   Timer? _aNTPTimer;
   int offset = 0;
@@ -40,15 +44,43 @@ class _HomePageState extends State<HomePage> {
 
       var qdt = Q2Date(date);
 
-      // todo: make seperation characters costumizable
       _b36Date = '${qdt.b36Year}/${qdt.b36Pernor}${qdt.b36Scrop}-${qdt.b36Day}';
-      _mtArton = "${qdt.mtArton}'";
-      _mtJitt = '${qdt.mtJitt}"';
+      _qdArton = "${qdt.qdArton}'";
+      _qdJitt = '${qdt.qdJitt}"';
 
       _gregorianDate = '${qdt.grYear}-${qdt.grMonth}-${qdt.grDay}';
       _gregorianHour = qdt.sdHour;
       _gregorianMinute = ':${qdt.sdMinute}';
       _gregorianSecond = ':${qdt.sdSecond}';
+      _amp = (int.parse(qdt.sdHour) < 12) ? 'AM' : 'PM';
+      _12h = (((int.parse(qdt.sdHour) + 11) % 12) + 1).toString().padLeft(2, '0');
+      var wd = date.weekday;
+      switch (wd) {
+        case DateTime.monday:
+          _weekday = 'mon';
+          break;
+        case DateTime.tuesday:
+          _weekday = 'tue';
+          break;
+        case DateTime.wednesday:
+          _weekday = 'wed';
+          break;
+        case DateTime.thursday:
+          _weekday = 'thu';
+          break;
+        case DateTime.friday:
+          _weekday = 'fri';
+          break;
+        case DateTime.saturday:
+          _weekday = 'sat';
+          break;
+        case DateTime.sunday:
+          _weekday = 'sun';
+          break;
+        default:
+          _weekday = '';
+      }
+      _weeknum = date.getWeek.toString().padLeft(2, '0');
     });
   }
 
@@ -56,10 +88,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _getTime(DateTime.now());
-    _clockTimer = Timer.periodic(
-        const Duration(milliseconds: 10), (Timer t) => _setCurrentDate());
-    _aNTPTimer = Timer.periodic(
-        const Duration(seconds: 10), (Timer t) => _getTime(DateTime.now()));
+    _clockTimer = Timer.periodic(const Duration(milliseconds: 10), (Timer t) => _setCurrentDate());
+    _aNTPTimer = Timer.periodic(const Duration(seconds: 10), (Timer t) => _getTime(DateTime.now()));
   }
 
   @override
@@ -122,8 +152,7 @@ class _HomePageState extends State<HomePage> {
                         ]),
                   ),
                   StreamBuilder(
-                    stream:
-                        fd.Firestore.instance.collection('blog_posts').stream,
+                    stream: fd.Firestore.instance.collection('blog_posts').stream,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return post('No posts', []);
@@ -175,13 +204,12 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              _mtArton,
+              _qdArton,
               style: const TextStyle(fontSize: 68, fontWeight: FontWeight.w900),
             ),
             Text(
-              _mtJitt,
-              style: const TextStyle(
-                  fontSize: 40, fontWeight: FontWeight.w300, height: 1.4),
+              _qdJitt,
+              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.w300, height: 1.4),
             ),
           ],
         ),
@@ -193,13 +221,44 @@ class _HomePageState extends State<HomePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          _gregorianDate,
-          style: const TextStyle(fontSize: 40, fontWeight: FontWeight.w300),
+        Row(
+          children: [
+            Text(
+              _gregorianDate,
+              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.w300),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              children: [
+                Text(
+                  '($_weeknum)',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+                ),
+                Text(
+                  _weekday,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ],
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Column(
+              children: [
+                const SizedBox(height: 5),
+                Text(
+                  _amp,
+                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w300),
+                ),
+                Text(
+                  _12h,
+                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+            const SizedBox(width: 10),
             Text(
               _gregorianHour,
               style: const TextStyle(fontSize: 68, fontWeight: FontWeight.w900),
@@ -210,8 +269,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Text(
               _gregorianSecond,
-              style: const TextStyle(
-                  fontSize: 40, fontWeight: FontWeight.w300, height: 1.4),
+              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.w300, height: 1.4),
             ),
           ],
         ),
@@ -240,16 +298,14 @@ class _HomePageState extends State<HomePage> {
   Text postParagraph(String par) {
     return Text(
       '\n$par',
-      style:
-          const TextStyle(fontSize: 14, fontFamily: 'Fira code', height: 1.5),
+      style: const TextStyle(fontSize: 14, fontFamily: 'Fira code', height: 1.5),
     );
   }
 
   Text postTitle(String title) {
     return Text(
       " $title \n${"-" * (title.length + 2)}",
-      style: const TextStyle(
-          fontSize: 18, fontFamily: 'Fira code', fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 18, fontFamily: 'Fira code', fontWeight: FontWeight.bold),
     );
   }
 }

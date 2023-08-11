@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     if (auth.isSignedIn) {
       return Center(
-        child: ElevatedButton(
+        child: OutlinedButton(
           onPressed: () async {
             auth.signOut();
             setState(() {});
@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              OutlinedButton(
                 onPressed: () async {
                   if (email.isNotEmpty && password.isNotEmpty) {
                     await auth.signIn(email, password);
