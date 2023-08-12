@@ -116,6 +116,7 @@ class _TimelinePageState extends State<TimelinePage> {
                 }
 
                 return ListView(
+                  padding: const EdgeInsets.only(bottom: 10),
                   children: events,
                 );
               })),

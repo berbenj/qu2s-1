@@ -99,7 +99,7 @@ class Qu2sApp extends StatelessWidget {
                     ),
                   ),
                 )),
-            Positioned(top: -78, child: Image.asset('img/logo.png', scale: 5)),
+            Positioned(top: -78, child: IgnorePointer(child: Image.asset('img/logo.png', scale: 5))),
           ]),
         );
       },

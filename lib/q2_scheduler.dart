@@ -16,6 +16,7 @@ void schedule(List<fd.Document> eventDocs, fd.CollectionReference eventCollectio
         doc['lastDone'],
         doc['repeating'],
         doc['repeateEveryXHour'],
+        doc['priority'],
       ));
     }
   }
@@ -29,18 +30,16 @@ void schedule(List<fd.Document> eventDocs, fd.CollectionReference eventCollectio
   for (var event in events) {
     if (event.repeating) {
       if (event.repeateEveryXHour != null) {
-        while ((event.availabilityEnd.subtract(event.length)).isPast) {
+        while ((event.availabilityEnd.subtract(event.length)).isPast ||
+            (event.lastTimeDone != null && event.availabilityStart.isBefore(event.lastTimeDone!))) {
           event.availabilityStart = event.availabilityStart.addHours(event.repeateEveryXHour!);
           event.availabilityEnd = event.availabilityEnd.addHours(event.repeateEveryXHour!);
         }
       } else {
         event.availabilityStart = now;
         event.availabilityEnd = now.add(const Duration(days: 365 * 100));
-        continue;
       }
-    }
-
-    if ((event.availabilityEnd.subtract(event.length)).isPast) {
+    } else if ((event.availabilityEnd.subtract(event.length)).isPast) {
       pastEvents.add(event);
     }
 
@@ -63,6 +62,7 @@ void schedule(List<fd.Document> eventDocs, fd.CollectionReference eventCollectio
     if (a.repeating && !b.repeating) return 1;
     return a.flexibilty.compareTo(b.flexibilty);
   });
+  events.sort((a, b) => b.priority.compareTo(a.priority));
 
   for (;;) {
     if (events.isEmpty) {

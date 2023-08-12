@@ -16,8 +16,10 @@ class Event {
   int? repeateEveryXHour;
   int? numOfEvents;
 
+  int priority;
+
   Event(this.id, this.name, this.availabilityStart, this.availabilityEnd, this.length, this.numOfEvents,
-      this.lastTimeDone, this.repeating, this.repeateEveryXHour);
+      this.lastTimeDone, this.repeating, this.repeateEveryXHour, this.priority);
   // assert(length <= (availabilityEnd.difference(availabilityStart)));
 
   /// duration of witch this event can be shifted at max if it is placed at the start of it's awailability

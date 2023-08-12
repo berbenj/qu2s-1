@@ -170,6 +170,7 @@ class _TaskDetailState extends State<TaskDetail> {
   var repeating = false;
   var repeateEveryXHour = TextEditingController();
   var numOfEvents = TextEditingController();
+  var priority = TextEditingController(text: '0');
 
   @override
   Widget build(BuildContext context) {
@@ -235,6 +236,7 @@ class _TaskDetailState extends State<TaskDetail> {
                       },
                     ),
                   ),
+                  const SizedBox(width: 20),
                   Expanded(
                     flex: 1,
                     child: TextFormField(
@@ -294,6 +296,7 @@ class _TaskDetailState extends State<TaskDetail> {
                       },
                     ),
                   ),
+                  const SizedBox(width: 20),
                   Expanded(
                     flex: 1,
                     child: TextFormField(
@@ -322,17 +325,30 @@ class _TaskDetailState extends State<TaskDetail> {
                   ),
                 ],
               ),
-              TextFormField(
-                controller: lengthInMinutes,
-                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(icon: Icon(Icons.timelapse), labelText: 'Length (in minutes)'),
-                validator: (value) {
-                  if (value == null || value == '') {
-                    return 'Please provide a length';
-                  } else {
-                    return null;
-                  }
-                },
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: lengthInMinutes,
+                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                      decoration: const InputDecoration(icon: Icon(Icons.timelapse), labelText: 'Length (in minutes)'),
+                      validator: (value) {
+                        if (value == null || value == '') {
+                          return 'Please provide a length';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: TextFormField(
+                      controller: numOfEvents,
+                      decoration: const InputDecoration(icon: Icon(Icons.numbers_sharp), labelText: 'Number of events'),
+                    ),
+                  )
+                ],
               ),
               Row(
                 children: [
@@ -347,6 +363,7 @@ class _TaskDetailState extends State<TaskDetail> {
                           });
                         }),
                   ),
+                  const SizedBox(width: 20),
                   Expanded(
                     child: TextFormField(
                       controller: repeateEveryXHour,
@@ -355,23 +372,44 @@ class _TaskDetailState extends State<TaskDetail> {
                   )
                 ],
               ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: priority,
+                      decoration: const InputDecoration(
+                          icon: Icon(Icons.priority_high), labelText: 'priority (bigger number bigger priority)'),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  const Expanded(child: Center()),
+                ],
+              ),
               const SizedBox(height: 30),
               OutlinedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      var event = await eventCollection.add({
-                        'title': title.text,
-                        'description': description.text,
-                        'minStartDateTime': startDateTime,
-                        'maxEndDateTime': endDateTime,
-                        'startDateTime': null,
-                        'endDateTime': null,
-                        'lengthInMinutes': int.parse(lengthInMinutes.text),
-                        'repeating': repeating,
-                        'done': false,
-                        'lastDone': null,
-                        'repeateEveryXHour': repeateEveryXHour.text.isEmpty ? null : int.parse(repeateEveryXHour.text),
-                      });
+                      var num = int.tryParse(numOfEvents.text);
+                      num ??= 1;
+                      var eventIds = <String>[];
+                      for (var i = 0; i < num; i++) {
+                        var event = await eventCollection.add({
+                          'title': title.text,
+                          'description': description.text,
+                          'minStartDateTime': startDateTime,
+                          'maxEndDateTime': endDateTime,
+                          'startDateTime': null,
+                          'endDateTime': null,
+                          'lengthInMinutes': int.parse(lengthInMinutes.text),
+                          'repeating': repeating,
+                          'done': false,
+                          'lastDone': null,
+                          'repeateEveryXHour':
+                              repeateEveryXHour.text.isEmpty ? null : int.parse(repeateEveryXHour.text),
+                          'priority': int.parse(priority.text),
+                        });
+                        eventIds.add(event.id);
+                      }
                       await taskCollection.add({
                         'title': title.text,
                         'description': description.text,
@@ -379,7 +417,8 @@ class _TaskDetailState extends State<TaskDetail> {
                         'endDateTime': endDateTime,
                         'lengthInMinutes': int.parse(lengthInMinutes.text),
                         'repeating': repeating,
-                        'events': [event.id],
+                        'events': eventIds,
+                        'priority': int.parse(priority.text),
                       });
                       await eventDoc.update({'needsReschedule': true});
                       setState(() {
@@ -392,8 +431,10 @@ class _TaskDetailState extends State<TaskDetail> {
                         endDate.clear();
                         endTime.clear();
                         lengthInMinutes.clear();
+                        numOfEvents.clear();
                         repeating = false;
                         repeateEveryXHour.clear();
+                        priority.clear();
                       });
                     }
                   },
@@ -415,7 +456,13 @@ class _TaskDetailState extends State<TaskDetail> {
           endDate.text = '${endDateTime.year}-${endDateTime.month}-${endDateTime.day}';
           endTime.text = '${endDateTime.hour}:${endDateTime.minute}';
           lengthInMinutes.text = s.data!['lengthInMinutes'].toString();
+          numOfEvents.text = s.data!['events'].length.toString();
+          if (numOfEvents.text == 'null') numOfEvents.text = '';
           repeating = s.data!['repeating'];
+          repeateEveryXHour.text = s.data!['repeateEveryXHour'].toString();
+          if (repeateEveryXHour.text == 'null') repeateEveryXHour.text = '';
+          priority.text = s.data!['priority'].toString();
+          if (priority.text == 'null') priority.text = '0';
 
           return SingleChildScrollView(
             child: Form(
@@ -470,6 +517,7 @@ class _TaskDetailState extends State<TaskDetail> {
                           },
                         ),
                       ),
+                      const SizedBox(width: 20),
                       Expanded(
                         flex: 1,
                         child: TextFormField(
@@ -525,6 +573,7 @@ class _TaskDetailState extends State<TaskDetail> {
                           },
                         ),
                       ),
+                      const SizedBox(width: 20),
                       Expanded(
                         flex: 1,
                         child: TextFormField(
@@ -569,6 +618,7 @@ class _TaskDetailState extends State<TaskDetail> {
                           },
                         ),
                       ),
+                      const SizedBox(width: 20),
                       Expanded(
                         child: TextFormField(
                           controller: numOfEvents,
@@ -591,6 +641,7 @@ class _TaskDetailState extends State<TaskDetail> {
                               });
                             }),
                       ),
+                      const SizedBox(width: 20),
                       Expanded(
                         child: TextFormField(
                           controller: repeateEveryXHour,
@@ -600,9 +651,23 @@ class _TaskDetailState extends State<TaskDetail> {
                       )
                     ],
                   ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: priority,
+                          decoration: const InputDecoration(
+                              icon: Icon(Icons.priority_high), labelText: 'priority (bigger number bigger priority)'),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      const Expanded(child: Center()),
+                    ],
+                  ),
                   const SizedBox(height: 30),
                   OutlinedButton(
                       onPressed: () async {
+                        // todo: edit all connected events
                         if (_formKey.currentState!.validate()) {
                           await taskCollection.document(data[1]).update({
                             'title': title.text,
@@ -610,14 +675,19 @@ class _TaskDetailState extends State<TaskDetail> {
                             'startDateTime': startDateTime,
                             'endDateTime': endDateTime,
                             'lengthInMinutes': int.parse(lengthInMinutes.text),
+                            'priority': int.parse(priority.text),
                           });
+                          var num = int.tryParse(numOfEvents.text);
+                          num ??= 1;
                           var task = await taskCollection.document(data[1]).get();
-                          var event = await eventCollection.document(task['events'][0]).get();
-                          if (startDateTime != event['minStartDateTime'] ||
-                              endDateTime != event['maxEndDateTime'] ||
-                              int.parse(lengthInMinutes.text) != event['lengthInMinutes'] ||
-                              repeating != event['repeating']) {
-                            await eventCollection.document(task['events'][0]).update({
+                          List<dynamic> eventIds = task['events'];
+
+                          while (eventIds.length > num) {
+                            var id = eventIds.removeLast();
+                            eventCollection.document(id).delete();
+                          }
+                          while (eventIds.length < num) {
+                            var event = await eventCollection.add({
                               'title': title.text,
                               'description': description.text,
                               'minStartDateTime': startDateTime,
@@ -626,30 +696,62 @@ class _TaskDetailState extends State<TaskDetail> {
                               'endDateTime': null,
                               'lengthInMinutes': int.parse(lengthInMinutes.text),
                               'repeating': repeating,
+                              'done': false,
+                              'lastDone': null,
                               'repeateEveryXHour':
                                   repeateEveryXHour.text.isEmpty ? null : int.parse(repeateEveryXHour.text),
-                              'done': false,
+                              'priority': int.parse(priority.text),
                             });
-                            await eventDoc.update({'needsReschedule': true});
-                          } else {
-                            await eventCollection.document(task['events'][0]).update({
-                              'title': title.text,
-                              'description': description.text,
-                            });
-                            setState(() {
-                              title.clear();
-                              description.clear();
-                              startDateTime = DateTime.now();
-                              startDate.clear();
-                              startTime.clear();
-                              endDateTime = DateTime.now();
-                              endDate.clear();
-                              endTime.clear();
-                              lengthInMinutes.clear();
-                              repeating = false;
-                              repeateEveryXHour.clear();
-                            });
+                            eventIds.add(event.id);
                           }
+                          taskCollection.document(data[1]).update({'events': eventIds});
+
+                          for (var i = 0; i < num; i++) {
+                            var event = await eventCollection.document(eventIds[i]).get();
+                            if (startDateTime != event['minStartDateTime'] ||
+                                endDateTime != event['maxEndDateTime'] ||
+                                int.parse(lengthInMinutes.text) != event['lengthInMinutes'] ||
+                                repeating != event['repeating']) {
+                              await eventCollection.document(eventIds[i]).update({
+                                'title': title.text,
+                                'description': description.text,
+                                'minStartDateTime': startDateTime,
+                                'maxEndDateTime': endDateTime,
+                                'startDateTime': null,
+                                'endDateTime': null,
+                                'lengthInMinutes': int.parse(lengthInMinutes.text),
+                                'repeating': repeating,
+                                'repeateEveryXHour':
+                                    repeateEveryXHour.text.isEmpty ? null : int.parse(repeateEveryXHour.text),
+                                'done': false,
+                                'priority': int.parse(priority.text),
+                              });
+
+                              await eventDoc.update({'needsReschedule': true});
+                            } else {
+                              await eventCollection.document(eventIds[i]).update({
+                                'title': title.text,
+                                'description': description.text,
+                                'priority': int.parse(priority.text),
+                              });
+                            }
+                          }
+
+                          setState(() {
+                            title.clear();
+                            description.clear();
+                            startDateTime = DateTime.now();
+                            startDate.clear();
+                            startTime.clear();
+                            endDateTime = DateTime.now();
+                            endDate.clear();
+                            endTime.clear();
+                            lengthInMinutes.clear();
+                            numOfEvents.clear();
+                            repeating = false;
+                            repeateEveryXHour.clear();
+                            priority.clear();
+                          });
                           widget.callback(data[1]);
                         }
                       },
