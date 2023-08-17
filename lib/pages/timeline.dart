@@ -53,6 +53,8 @@ class _TimelinePageState extends State<TimelinePage> {
                 for (var doc in s.requireData) {
                   if (doc['startDateTime'] == null) continue;
 
+                  var maxEndTime = doc['maxEndDateTime'].toString().substring(0, 16);
+                  var maxTimeLeft = doc['maxEndDateTime'].difference(DateTime.now()).inDays + 1;
                   events.add(Row(
                     children: [
                       Expanded(
@@ -76,7 +78,8 @@ class _TimelinePageState extends State<TimelinePage> {
                                       Text(
                                           '${doc['startDateTime'].toString().substring(11, 16)} - ${doc['endDateTime'].toString().substring(11, 16)}'),
                                       Text('${doc['lengthInMinutes'].toString()} m'),
-                                      Text(doc['repeating'] ? '↻' : doc['maxEndDateTime'].toString().substring(0, 16)),
+                                      Text(doc['repeating'] ? '↻' : maxEndTime),
+                                      Text(doc['repeating'] ? '' : 'days left: $maxTimeLeft day(s)'),
                                     ],
                                   ),
                                 ),

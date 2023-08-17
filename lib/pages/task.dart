@@ -42,8 +42,8 @@ class _TaskPageState extends State<TaskPage> {
                   child: TaskDetail(callback, id),
                 ),
               ),
-              const Divider(height: 1, color: Color.fromARGB(255, 60, 60, 60)),
-              Expanded(child: eventsList()),
+              // const Divider(height: 1, color: Color.fromARGB(255, 60, 60, 60)),
+              // Expanded(child: eventsList()),
             ],
           ),
         )
@@ -92,6 +92,8 @@ class _TasksListState extends State<TasksList> {
           future: getTasks(tasksCollection),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              List<fd.Document> tasks = snapshot.requireData;
+              tasks.sort((a, b) => b['priority'].compareTo(a['priority']));
               return ListView(children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -107,7 +109,7 @@ class _TasksListState extends State<TasksList> {
                 ),
                 for (var i in snapshot.data!)
                   ListTile(
-                    title: Text(i['title']),
+                    title: Text('[${i['priority']}] ${i['title']}'),
                     tileColor: i.id == widget.id ? const Color.fromARGB(50, 255, 255, 255) : null,
                     onTap: () {
                       setState(() {
@@ -419,6 +421,7 @@ class _TaskDetailState extends State<TaskDetail> {
                         'repeating': repeating,
                         'events': eventIds,
                         'priority': int.parse(priority.text),
+                        'repeateEveryXHour': repeateEveryXHour.text.isEmpty ? null : int.parse(repeateEveryXHour.text),
                       });
                       await eventDoc.update({'needsReschedule': true});
                       setState(() {
@@ -434,7 +437,7 @@ class _TaskDetailState extends State<TaskDetail> {
                         numOfEvents.clear();
                         repeating = false;
                         repeateEveryXHour.clear();
-                        priority.clear();
+                        priority.text = '0';
                       });
                     }
                   },
@@ -676,11 +679,13 @@ class _TaskDetailState extends State<TaskDetail> {
                             'endDateTime': endDateTime,
                             'lengthInMinutes': int.parse(lengthInMinutes.text),
                             'priority': int.parse(priority.text),
+                            'repeateEveryXHour':
+                                repeateEveryXHour.text.isEmpty ? null : int.parse(repeateEveryXHour.text),
                           });
                           var num = int.tryParse(numOfEvents.text);
                           num ??= 1;
                           var task = await taskCollection.document(data[1]).get();
-                          List<dynamic> eventIds = task['events'];
+                          List<dynamic> eventIds = List.of(task['events'], growable: true);
 
                           while (eventIds.length > num) {
                             var id = eventIds.removeLast();
@@ -711,7 +716,8 @@ class _TaskDetailState extends State<TaskDetail> {
                             if (startDateTime != event['minStartDateTime'] ||
                                 endDateTime != event['maxEndDateTime'] ||
                                 int.parse(lengthInMinutes.text) != event['lengthInMinutes'] ||
-                                repeating != event['repeating']) {
+                                repeating != event['repeating'] ||
+                                int.parse(repeateEveryXHour.text) != event['repeateEveryXHour']) {
                               await eventCollection.document(eventIds[i]).update({
                                 'title': title.text,
                                 'description': description.text,
@@ -750,7 +756,7 @@ class _TaskDetailState extends State<TaskDetail> {
                             numOfEvents.clear();
                             repeating = false;
                             repeateEveryXHour.clear();
-                            priority.clear();
+                            priority.text = '0';
                           });
                           widget.callback(data[1]);
                         }
